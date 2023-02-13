@@ -76,8 +76,8 @@ jacocoTestReport {
     afterEvaluate {
         classDirectories.setFrom(files(classDirectories.files.collect {
             fileTree(dir: it, exclude: [
-                    "net.kryszak.healme/**/configuration/*",
-                    "net.kryszak.healme/**/*Entity.*"
+                    "net/kryszak/healme/**/configuration/*",
+                    "net/kryszak/healme/**/*Entity.*"
             ])
         }))
     }

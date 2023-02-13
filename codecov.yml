@@ -1,3 +1,0 @@
-ignore:
-  - net/kryszak/healme/**/configuration/*
-  - net/kryszak/healme/**/*Entity.*

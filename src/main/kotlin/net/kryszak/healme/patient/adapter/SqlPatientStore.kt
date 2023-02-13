@@ -12,7 +12,7 @@ import org.springframework.data.domain.Pageable
 class SqlPatientStore(private val patientRepository: PatientRepository) : PatientStore {
 
     override fun savePatient(params: CreatePatientParams): Either<Throwable, Patient> =
-        PatientEntity.from(params)
+        PatientEntity.fromParams(params)
             .let { Either.catch { patientRepository.save(it) } }
             .map(PatientEntity::toDomain)
 
@@ -25,4 +25,11 @@ class SqlPatientStore(private val patientRepository: PatientRepository) : Patien
             patientRepository.findByIdAndOwner(patientId, tenantId.value)
                 ?: throw DataNotFoundException("Patient with id={$patientId} not found under owner={$tenantId}")
         }.map(PatientEntity::toDomain)
+
+    override fun updatePatient(patient: Patient): Either<Throwable, Patient> =
+        Either.catch {
+            PatientEntity.fromDomain(patient)
+                .let(patientRepository::save)
+        }.map(PatientEntity::toDomain)
+
 }

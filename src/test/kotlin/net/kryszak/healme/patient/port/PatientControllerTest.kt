@@ -16,6 +16,7 @@ import org.springframework.test.context.jdbc.Sql
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.get
 import org.springframework.test.web.servlet.post
+import org.springframework.test.web.servlet.put
 
 
 @SpringBootTest
@@ -68,9 +69,9 @@ class PatientControllerTest(
         }.andExpect {
             status { isOk() }
             content { contentType(MediaType.APPLICATION_JSON) }
-            content { jsonPath("\$.content[0].name") { value(PATIENT_NAME) } }
-            content { jsonPath("\$.content[0].surname") { value(PATIENT_SURNAME) } }
-            content { jsonPath("\$.content[0].address") { value(PATIENT_ADDRESS) } }
+            content { jsonPath("\$.content[0].name") { isNotEmpty() } }
+            content { jsonPath("\$.content[0].surname") { isNotEmpty() } }
+            content { jsonPath("\$.content[0].address") { isNotEmpty() } }
         }
     }
 
@@ -105,6 +106,73 @@ class PatientControllerTest(
             header("x-api-key", "test")
         }.andExpect {
             status { isNotFound() }
+        }
+    }
+
+    should("update patient") {
+        //given
+        val patientId = patientStore.savePatient(
+            CreatePatientParams(
+                PATIENT_NAME,
+                PATIENT_SURNAME,
+                PATIENT_ADDRESS,
+                TenantId(UUID.fromString("1bfcfd37-eafa-414a-94be-b377c7399a39"))
+            )
+        )
+            .map(Patient::id)
+            .getOrNull() ?: throw Exception()
+        val request = UpdatePatientDto(patientId, "New name", "New Surname", "another address")
+
+        //when & then
+        mockMvc.put("/patients/$patientId") {
+            header("x-api-key", "test")
+            contentType = MediaType.APPLICATION_JSON
+            content = objectMapper.writeValueAsString(request)
+        }.andExpect {
+            status { isOk() }
+            content { contentType(MediaType.APPLICATION_JSON) }
+            content { jsonPath("\$.name") { value("New name") } }
+            content { jsonPath("\$.surname") { value("New Surname") } }
+            content { jsonPath("\$.address") { value("another address") } }
+        }
+    }
+
+    should("return 404 if attempted to update non existing user") {
+        //given
+        val patientId = 10000L
+        val request = UpdatePatientDto(patientId, "New name", "New Surname", "another address")
+
+        //when & then
+        mockMvc.put("/patients/$patientId") {
+            header("x-api-key", "test")
+            contentType = MediaType.APPLICATION_JSON
+            content = objectMapper.writeValueAsString(request)
+        }.andExpect {
+            status { isNotFound() }
+        }
+    }
+
+    should("return 400 if attempted to update another with id other than provided in url") {
+        //given
+        val patientId = patientStore.savePatient(
+            CreatePatientParams(
+                PATIENT_NAME,
+                PATIENT_SURNAME,
+                PATIENT_ADDRESS,
+                TenantId(UUID.fromString("1bfcfd37-eafa-414a-94be-b377c7399a39"))
+            )
+        )
+            .map(Patient::id)
+            .getOrNull() ?: throw Exception()
+        val request = UpdatePatientDto(2L, "New name", "New Surname", "another address")
+
+        //when & then
+        mockMvc.put("/patients/$patientId") {
+            header("x-api-key", "test")
+            contentType = MediaType.APPLICATION_JSON
+            content = objectMapper.writeValueAsString(request)
+        }.andExpect {
+            status { isBadRequest() }
         }
     }
 

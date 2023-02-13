@@ -20,7 +20,7 @@ class SqlPatientStoreTest : ShouldSpec({
     should("create new patient") {
         // given
         val params = CreatePatientParams(PATIENT_NAME, PATIENT_SURNAME, PATIENT_ADDRESS, PATIENT_OWNER)
-        every { patientRepository.save(PatientEntity.from(params)) } returns testPatientEntity()
+        every { patientRepository.save(PatientEntity.fromParams(params)) } returns testPatientEntity()
 
         //when
         val result = patientStore.savePatient(params)
@@ -34,7 +34,7 @@ class SqlPatientStoreTest : ShouldSpec({
         val params =
             CreatePatientParams("Jan", "Random", "Losowa street 2, Randomize Town", TenantId(UUID.randomUUID()))
         val exception = Exception()
-        every { patientRepository.save(PatientEntity.from(params)) } throws exception
+        every { patientRepository.save(PatientEntity.fromParams(params)) } throws exception
 
         //when
         val result = patientStore.savePatient(params)
@@ -80,5 +80,17 @@ class SqlPatientStoreTest : ShouldSpec({
 
         //then
         result shouldBeLeft DataNotFoundException("Patient with id={$PATIENT_ID} not found under owner={$PATIENT_OWNER}")
+    }
+
+    should("update patient") {
+        //given
+        val patient = testPatient()
+        every { patientRepository.save(testPatientEntity()) } returns testPatientEntity()
+
+        //when
+        val result = patientStore.updatePatient(patient)
+
+        //then
+        result shouldBeRight patient
     }
 })

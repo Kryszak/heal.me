@@ -41,11 +41,19 @@ class PatientEntity {
     override fun hashCode(): Int = id.hashCode()
 
     companion object {
-        fun from(params: CreatePatientParams) = PatientEntity().apply {
+        fun fromParams(params: CreatePatientParams) = PatientEntity().apply {
             name = params.name
             surname = params.surname
             address = params.address
             owner = params.owner.value
+        }
+
+        fun fromDomain(patient: Patient) = PatientEntity().apply {
+            id = patient.id
+            name = patient.name
+            surname = patient.surname
+            address = patient.address
+            owner = patient.owner.value
         }
     }
 }

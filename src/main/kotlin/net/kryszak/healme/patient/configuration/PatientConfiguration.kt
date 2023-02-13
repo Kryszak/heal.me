@@ -1,10 +1,7 @@
 package net.kryszak.healme.patient.configuration
 
 import net.kryszak.healme.common.TenantStore
-import net.kryszak.healme.patient.CreatePatientCommand
-import net.kryszak.healme.patient.GetPatientQuery
-import net.kryszak.healme.patient.GetPatientsQuery
-import net.kryszak.healme.patient.PatientStore
+import net.kryszak.healme.patient.*
 import net.kryszak.healme.patient.adapter.PatientRepository
 import net.kryszak.healme.patient.adapter.SqlPatientStore
 import org.springframework.context.annotation.Bean
@@ -27,4 +24,8 @@ class PatientConfiguration {
     @Bean
     fun getPatientQuery(patientStore: PatientStore, commonTenantStore: TenantStore) =
         GetPatientQuery(patientStore, commonTenantStore)
+
+    @Bean
+    fun updatePatientCommand(patientStore: PatientStore, commonTenantStore: TenantStore) =
+        UpdatePatientCommand(patientStore, commonTenantStore)
 }

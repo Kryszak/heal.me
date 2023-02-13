@@ -13,6 +13,8 @@ interface PatientStore {
 
     fun findPatient(tenantId: TenantId, patientId: Long): Either<Throwable, Patient>
 
+    fun updatePatient(patient: Patient): Either<Throwable, Patient>
+
 }
 
 data class CreatePatientParams(
