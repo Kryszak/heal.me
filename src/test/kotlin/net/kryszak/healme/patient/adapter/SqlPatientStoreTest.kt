@@ -7,8 +7,9 @@ import io.mockk.every
 import io.mockk.mockk
 import java.util.UUID
 import net.kryszak.healme.authentication.TenantId
-import net.kryszak.healme.patient.CreatePatientParams
-import net.kryszak.healme.patient.Patient
+import net.kryszak.healme.patient.*
+import org.springframework.data.domain.PageImpl
+import org.springframework.data.domain.Pageable
 
 class SqlPatientStoreTest : ShouldSpec({
 
@@ -17,26 +18,14 @@ class SqlPatientStoreTest : ShouldSpec({
 
     should("create new patient") {
         // given
-        val createdId = 1L
-        val name = "Jan"
-        val surname = "Random"
-        val address = "Losowa street 2, Randomize Town"
-        val owner = TenantId(UUID.randomUUID())
-        val params = CreatePatientParams(name, surname, address, owner)
-        val savedEntity = PatientEntity().apply {
-            this.id = createdId
-            this.name = name
-            this.surname = surname
-            this.address = address
-            this.owner = owner.value
-        }
-        every { patientRepository.save(PatientEntity.from(params)) } returns savedEntity
+        val params = CreatePatientParams(PATIENT_NAME, PATIENT_SURNAME, PATIENT_ADDRESS, PATIENT_OWNER)
+        every { patientRepository.save(PatientEntity.from(params)) } returns testPatientEntity()
 
         //when
         val result = patientStore.savePatient(params)
 
         //then
-        result shouldBeRight Patient(createdId, name, surname, address, owner)
+        result shouldBeRight testPatient()
     }
 
     should("return exception if saving new patient failed") {
@@ -51,5 +40,22 @@ class SqlPatientStoreTest : ShouldSpec({
 
         //then
         result shouldBeLeft exception
+    }
+
+    should("retrieve patient list") {
+        //given
+        val pageable = Pageable.unpaged()
+        every {
+            patientRepository.findAllByOwner(
+                PATIENT_OWNER.value,
+                pageable
+            )
+        } returns PageImpl(listOf(testPatientEntity()))
+
+        //when
+        val result = patientStore.findPatients(PATIENT_OWNER, pageable)
+
+        //then
+        result shouldBeRight PageImpl(listOf(testPatient()))
     }
 })

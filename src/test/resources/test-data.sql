@@ -1,1 +1,0 @@
-INSERT INTO tenant VALUES('1bfcfd37-eafa-414a-94be-b377c7399a39', 'test');

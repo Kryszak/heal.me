@@ -6,8 +6,6 @@ import io.kotest.assertions.arrow.core.shouldBeRight
 import io.kotest.core.spec.style.ShouldSpec
 import io.mockk.every
 import io.mockk.mockk
-import java.util.UUID
-import net.kryszak.healme.authentication.TenantId
 import net.kryszak.healme.common.TenantStore
 import net.kryszak.healme.patient.CreatePatientCommand.Input
 
@@ -19,21 +17,18 @@ class CreatePatientCommandTest : ShouldSpec({
 
     should("create new patient") {
         //given
-        val name = "Jan"
-        val surname = "Random"
-        val address = "Losowa street 2, Randomize Town"
-        val tenantId = TenantId(UUID.randomUUID())
-        val input = Input(name, surname, address)
-        every { tenantStore.getCurrentTenant() } returns Either.Right(tenantId)
-        every { patientStore.savePatient(CreatePatientParams(name, surname, address, tenantId)) } returns Either.Right(
-            Patient(
-                1,
-                name,
-                surname,
-                address,
-                tenantId
+        val input = Input(PATIENT_NAME, PATIENT_SURNAME, PATIENT_ADDRESS)
+        every { tenantStore.getCurrentTenant() } returns Either.Right(PATIENT_OWNER)
+        every {
+            patientStore.savePatient(
+                CreatePatientParams(
+                    PATIENT_NAME,
+                    PATIENT_SURNAME,
+                    PATIENT_ADDRESS,
+                    PATIENT_OWNER
+                )
             )
-        )
+        } returns Either.Right(testPatient())
 
         //when
         val result = command.execute(input)
@@ -44,26 +39,34 @@ class CreatePatientCommandTest : ShouldSpec({
 
     should("return exception if creation of new patient fails") {
         //given
-        val name = "Jan"
-        val surname = "Random"
-        val address = "Losowa street 2, Randomize Town"
-        val input = Input(name, surname, address)
+        val input = Input(PATIENT_NAME, PATIENT_SURNAME, PATIENT_ADDRESS)
         val exception = Exception()
-        val tenantId = TenantId((UUID.randomUUID()))
-        every { tenantStore.getCurrentTenant() } returns Either.Right(tenantId)
+        every { tenantStore.getCurrentTenant() } returns Either.Right(PATIENT_OWNER)
         every {
             patientStore.savePatient(
                 CreatePatientParams(
-                    name,
-                    surname,
-                    address,
-                    tenantId
+                    PATIENT_NAME,
+                    PATIENT_SURNAME,
+                    PATIENT_ADDRESS,
+                    PATIENT_OWNER
                 )
             )
         } returns Either.Left(exception)
 
         //when
         val result = command.execute(input)
+
+        //then
+        result shouldBeLeft exception
+    }
+
+    should("return error when tenant id is not found") {
+        //given
+        val exception = Exception()
+        every { tenantStore.getCurrentTenant() } returns Either.Left(exception)
+
+        //when
+        val result = command.execute(Input(PATIENT_NAME, PATIENT_SURNAME, PATIENT_ADDRESS))
 
         //then
         result shouldBeLeft exception
