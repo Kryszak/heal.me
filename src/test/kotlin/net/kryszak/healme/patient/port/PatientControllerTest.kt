@@ -42,6 +42,15 @@ class PatientControllerTest(
         }
     }
 
+    should("return 403 response if tenant is not found") {
+        //when & then
+        mockMvc.get("/patients") {
+            header("x-api-key", "i-do-not-exist")
+        }.andExpect {
+            status { isForbidden() }
+        }
+    }
+
     should("retrieve patient list") {
         //given
         patientStore.savePatient(
@@ -62,6 +71,40 @@ class PatientControllerTest(
             content { jsonPath("\$.content[0].name") { value(PATIENT_NAME) } }
             content { jsonPath("\$.content[0].surname") { value(PATIENT_SURNAME) } }
             content { jsonPath("\$.content[0].address") { value(PATIENT_ADDRESS) } }
+        }
+    }
+
+    should("retrieve patient for given id") {
+        //given
+        val patientId = patientStore.savePatient(
+            CreatePatientParams(
+                PATIENT_NAME,
+                PATIENT_SURNAME,
+                PATIENT_ADDRESS,
+                TenantId(UUID.fromString("1bfcfd37-eafa-414a-94be-b377c7399a39"))
+            )
+        )
+            .map(Patient::id)
+            .getOrNull()
+
+        //when & then
+        mockMvc.get("/patients/$patientId") {
+            header("x-api-key", "test")
+        }.andExpect {
+            status { isOk() }
+            content { contentType(MediaType.APPLICATION_JSON) }
+            content { jsonPath("\$.name") { value(PATIENT_NAME) } }
+            content { jsonPath("\$.surname") { value(PATIENT_SURNAME) } }
+            content { jsonPath("\$.address") { value(PATIENT_ADDRESS) } }
+        }
+    }
+
+    should("return 404 status if patient was not found") {
+        //when & then
+        mockMvc.get("/patients/10000") {
+            header("x-api-key", "test")
+        }.andExpect {
+            status { isNotFound() }
         }
     }
 

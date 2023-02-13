@@ -2,6 +2,7 @@ package net.kryszak.healme.patient.port
 
 import net.kryszak.healme.common.exception.ExceptionMapper
 import net.kryszak.healme.patient.CreatePatientCommand
+import net.kryszak.healme.patient.GetPatientQuery
 import net.kryszak.healme.patient.GetPatientsQuery
 import net.kryszak.healme.patient.GetPatientsQuery.Input
 import org.springframework.data.domain.Pageable
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.*
 class PatientController(
     val createPatientCommand: CreatePatientCommand,
     val getPatientsQuery: GetPatientsQuery,
+    val getPatientQuery: GetPatientQuery,
     val exceptionMapper: ExceptionMapper
 ) {
 
@@ -27,8 +29,14 @@ class PatientController(
         pageable: Pageable
     ): ResponseEntity<*> =
         getPatientsQuery.execute(Input(pageable))
-            .fold(exceptionMapper::mapExceptionToDto) { ResponseEntity.ok(it.map(PatientDto::from)) }
+            .map { it.map(PatientDto::from) }
+            .fold(exceptionMapper::mapExceptionToDto) { ResponseEntity.ok(it) }
 
+    @GetMapping("/{patientId}")
+    fun getPatient(@PathVariable patientId: Long): ResponseEntity<*> =
+        getPatientQuery.execute(GetPatientQuery.Input(patientId))
+            .map(PatientDto::from)
+            .fold(exceptionMapper::mapExceptionToDto) { ResponseEntity.ok(it) }
 
     @PostMapping
     fun createPatient(@RequestBody dto: CreatePatientDto): ResponseEntity<*> =

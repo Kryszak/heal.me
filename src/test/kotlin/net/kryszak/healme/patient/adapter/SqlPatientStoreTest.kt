@@ -7,6 +7,7 @@ import io.mockk.every
 import io.mockk.mockk
 import java.util.UUID
 import net.kryszak.healme.authentication.TenantId
+import net.kryszak.healme.common.exception.DataNotFoundException
 import net.kryszak.healme.patient.*
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
@@ -57,5 +58,27 @@ class SqlPatientStoreTest : ShouldSpec({
 
         //then
         result shouldBeRight PageImpl(listOf(testPatient()))
+    }
+
+    should("find patient") {
+        //given
+        every { patientRepository.findByIdAndOwner(PATIENT_ID, PATIENT_OWNER.value) } returns testPatientEntity()
+
+        //when
+        val result = patientStore.findPatient(PATIENT_OWNER, PATIENT_ID)
+
+        //then
+        result shouldBeRight testPatient()
+    }
+
+    should("return error if patient is not found") {
+        //given
+        every { patientRepository.findByIdAndOwner(PATIENT_ID, PATIENT_OWNER.value) } returns null
+
+        //when
+        val result = patientStore.findPatient(PATIENT_OWNER, PATIENT_ID)
+
+        //then
+        result shouldBeLeft DataNotFoundException("Patient with id={$PATIENT_ID} not found under owner={$PATIENT_OWNER}")
     }
 })

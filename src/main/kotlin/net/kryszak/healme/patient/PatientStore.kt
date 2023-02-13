@@ -11,6 +11,8 @@ interface PatientStore {
 
     fun findPatients(tenantId: TenantId, pageable: Pageable): Either<Throwable, Page<Patient>>
 
+    fun findPatient(tenantId: TenantId, patientId: Long): Either<Throwable, Patient>
+
 }
 
 data class CreatePatientParams(
