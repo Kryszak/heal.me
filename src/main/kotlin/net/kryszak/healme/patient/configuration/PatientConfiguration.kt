@@ -28,4 +28,8 @@ class PatientConfiguration {
     @Bean
     fun updatePatientCommand(patientStore: PatientStore, commonTenantStore: TenantStore) =
         UpdatePatientCommand(patientStore, commonTenantStore)
+
+    @Bean
+    fun deletePatientCommand(patientStore: PatientStore, commonTenantStore: TenantStore) =
+        DeletePatientCommand(patientStore, commonTenantStore)
 }

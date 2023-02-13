@@ -15,6 +15,7 @@ interface PatientStore {
 
     fun updatePatient(patient: Patient): Either<Throwable, Patient>
 
+    fun deletePatient(patient: Patient): Either<Throwable, Unit>
 }
 
 data class CreatePatientParams(

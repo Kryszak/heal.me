@@ -13,10 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.MediaType
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.jdbc.Sql
-import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.get
-import org.springframework.test.web.servlet.post
-import org.springframework.test.web.servlet.put
+import org.springframework.test.web.servlet.*
 
 
 @SpringBootTest
@@ -173,6 +170,36 @@ class PatientControllerTest(
             content = objectMapper.writeValueAsString(request)
         }.andExpect {
             status { isBadRequest() }
+        }
+    }
+
+    should("delete given patient") {
+        //given
+        val patientId = patientStore.savePatient(
+            CreatePatientParams(
+                PATIENT_NAME,
+                PATIENT_SURNAME,
+                PATIENT_ADDRESS,
+                TenantId(UUID.fromString("1bfcfd37-eafa-414a-94be-b377c7399a39"))
+            )
+        )
+            .map(Patient::id)
+            .getOrNull()
+
+        //when & then
+        mockMvc.delete("/patients/$patientId") {
+            header("x-api-key", "test")
+        }.andExpect {
+            status { isNoContent() }
+        }
+    }
+
+    should("return 404 if attempted to delete not existing patient") {
+        //when & then
+        mockMvc.delete("/patients/10000") {
+            header("x-api-key", "test")
+        }.andExpect {
+            status { isNotFound() }
         }
     }
 

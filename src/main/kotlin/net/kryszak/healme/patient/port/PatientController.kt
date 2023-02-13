@@ -1,11 +1,8 @@
 package net.kryszak.healme.patient.port
 
 import net.kryszak.healme.common.exception.ExceptionMapper
-import net.kryszak.healme.patient.CreatePatientCommand
-import net.kryszak.healme.patient.GetPatientQuery
-import net.kryszak.healme.patient.GetPatientsQuery
+import net.kryszak.healme.patient.*
 import net.kryszak.healme.patient.GetPatientsQuery.Input
-import net.kryszak.healme.patient.UpdatePatientCommand
 import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
 import org.springframework.data.web.PageableDefault
@@ -17,11 +14,12 @@ import org.springframework.web.bind.annotation.*
 @RestController
 @RequestMapping("/patients")
 class PatientController(
-    val createPatientCommand: CreatePatientCommand,
-    val getPatientsQuery: GetPatientsQuery,
-    val getPatientQuery: GetPatientQuery,
-    val updatePatientCommand: UpdatePatientCommand,
-    val exceptionMapper: ExceptionMapper
+    private val createPatientCommand: CreatePatientCommand,
+    private val getPatientsQuery: GetPatientsQuery,
+    private val getPatientQuery: GetPatientQuery,
+    private val updatePatientCommand: UpdatePatientCommand,
+    private val deletePatientCommand: DeletePatientCommand,
+    private val exceptionMapper: ExceptionMapper
 ) {
 
     @GetMapping
@@ -61,4 +59,9 @@ class PatientController(
                 dto.address,
             )
         ).fold(exceptionMapper::mapExceptionToDto) { ResponseEntity.ok(it) }
+
+    @DeleteMapping("/{patientId}")
+    fun deletePatient(@PathVariable patientId: Long): ResponseEntity<*> =
+        deletePatientCommand.execute(DeletePatientCommand.Input(patientId))
+            .fold(exceptionMapper::mapExceptionToDto) { ResponseEntity.noContent().build() }
 }

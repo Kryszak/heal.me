@@ -32,4 +32,8 @@ class SqlPatientStore(private val patientRepository: PatientRepository) : Patien
                 .let(patientRepository::save)
         }.map(PatientEntity::toDomain)
 
+    override fun deletePatient(patient: Patient): Either<Throwable, Unit> =
+        Either.catch { patientRepository.delete(PatientEntity.fromDomain(patient)) }
+
+
 }
