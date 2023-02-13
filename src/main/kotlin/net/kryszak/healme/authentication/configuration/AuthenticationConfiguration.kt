@@ -1,9 +1,9 @@
 package net.kryszak.healme.authentication.configuration
 
-import net.kryszak.healme.authentication.adapter.SqlTenantStore
-import net.kryszak.healme.authentication.adapter.TenantRepository
 import net.kryszak.healme.authentication.GetTenantQuery
 import net.kryszak.healme.authentication.TenantStore
+import net.kryszak.healme.authentication.adapter.SqlTenantStore
+import net.kryszak.healme.authentication.adapter.TenantRepository
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
@@ -16,7 +16,7 @@ import org.springframework.security.web.SecurityFilterChain
 @EnableWebSecurity
 class AuthenticationConfiguration {
     companion object {
-        const val AUTH_HEADER_NAME = "X-Api-Key"
+        const val AUTH_HEADER_NAME = "x-api-key"
     }
 
     @Bean
@@ -37,7 +37,7 @@ class AuthenticationConfiguration {
 
     @Bean
     fun filterChain(http: HttpSecurity, apiKeyRequestFilter: ApiKeyRequestFilter): SecurityFilterChain {
-        http.antMatcher("/**")
+        http
             .csrf()
             .disable()
             .sessionManagement()
@@ -47,7 +47,6 @@ class AuthenticationConfiguration {
             .authorizeRequests()
             .anyRequest()
             .authenticated()
-            .and()
 
         return http.build()
     }
