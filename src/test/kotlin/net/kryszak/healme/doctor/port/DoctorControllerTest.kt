@@ -3,7 +3,9 @@ package net.kryszak.healme.doctor.port
 import com.fasterxml.jackson.databind.ObjectMapper
 import io.kotest.core.spec.style.ShouldSpec
 import io.kotest.extensions.spring.SpringExtension
-import net.kryszak.healme.doctor.DoctorStore
+import java.util.UUID
+import net.kryszak.healme.authentication.TenantId
+import net.kryszak.healme.doctor.*
 import org.junit.jupiter.api.Assertions.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
@@ -52,6 +54,29 @@ class DoctorControllerTest : ShouldSpec() {
                 header("x-api-key", "i-do-not-exist")
             }.andExpect {
                 status { isForbidden() }
+            }
+        }
+
+        should("retrieve doctor list") {
+            //given
+            doctorStore.saveDoctor(
+                CreateDoctorParams(
+                    DOCTOR_NAME,
+                    DOCTOR_SURNAME,
+                    DOCTOR_SPECIALIZATION,
+                    TenantId(UUID.fromString("1bfcfd37-eafa-414a-94be-b377c7399a39"))
+                )
+            )
+
+            //when & then
+            mockMvc.get("/doctors") {
+                header("x-api-key", "test")
+            }.andExpect {
+                status { isOk() }
+                content { contentType(MediaType.APPLICATION_JSON) }
+                content { jsonPath("\$.content[0].name") { isNotEmpty() } }
+                content { jsonPath("\$.content[0].surname") { isNotEmpty() } }
+                content { jsonPath("\$.content[0].specialization") { isNotEmpty() } }
             }
         }
     }

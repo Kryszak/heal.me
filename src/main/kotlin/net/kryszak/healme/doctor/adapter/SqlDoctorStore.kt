@@ -1,9 +1,12 @@
 package net.kryszak.healme.doctor.adapter
 
 import arrow.core.Either
+import net.kryszak.healme.authentication.TenantId
 import net.kryszak.healme.doctor.CreateDoctorParams
 import net.kryszak.healme.doctor.Doctor
 import net.kryszak.healme.doctor.DoctorStore
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 
 class SqlDoctorStore(
     private val doctorRepository: DoctorRepository
@@ -12,5 +15,9 @@ class SqlDoctorStore(
         DoctorEntity.fromParams(params)
             .let { Either.catch { doctorRepository.save(it) } }
             .map(DoctorEntity::toDomain)
+
+    override fun findDoctors(tenantId: TenantId, pageable: Pageable): Either<Throwable, Page<Doctor>> =
+        Either.catch { doctorRepository.findAllByOwner(tenantId.value, pageable) }
+            .map { it.map(DoctorEntity::toDomain) }
 
 }

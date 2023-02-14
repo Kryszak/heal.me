@@ -6,6 +6,8 @@ import io.kotest.core.spec.style.ShouldSpec
 import io.mockk.every
 import io.mockk.mockk
 import net.kryszak.healme.doctor.*
+import org.springframework.data.domain.PageImpl
+import org.springframework.data.domain.Pageable
 
 class SqlDoctorStoreTest : ShouldSpec({
     val doctorRepository = mockk<DoctorRepository>()
@@ -35,5 +37,22 @@ class SqlDoctorStoreTest : ShouldSpec({
 
         //then
         result shouldBeLeft exception
+    }
+
+    should("retrieve doctor list") {
+        //given
+        val pageable = Pageable.unpaged()
+        every {
+            doctorRepository.findAllByOwner(
+                DOCTOR_OWNER.value,
+                pageable
+            )
+        } returns PageImpl(listOf(testDoctorEntity()))
+
+        //when
+        val result = doctorStore.findDoctors(DOCTOR_OWNER, pageable)
+
+        //then
+        result shouldBeRight PageImpl(listOf(testDoctor()))
     }
 })

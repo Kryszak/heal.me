@@ -3,6 +3,7 @@ package net.kryszak.healme.doctor.configuration
 import net.kryszak.healme.common.TenantStore
 import net.kryszak.healme.doctor.CreateDoctorCommand
 import net.kryszak.healme.doctor.DoctorStore
+import net.kryszak.healme.doctor.GetDoctorsQuery
 import net.kryszak.healme.doctor.adapter.DoctorRepository
 import net.kryszak.healme.doctor.adapter.SqlDoctorStore
 import org.springframework.context.annotation.Bean
@@ -17,4 +18,8 @@ class DoctorConfiguration {
     @Bean
     fun createDoctorCommand(doctorStore: DoctorStore, commonTenantStore: TenantStore) =
         CreateDoctorCommand(doctorStore, commonTenantStore)
+
+    @Bean
+    fun getDoctorsQuery(doctorStore: DoctorStore, commonTenantStore: TenantStore) =
+        GetDoctorsQuery(doctorStore, commonTenantStore)
 }
