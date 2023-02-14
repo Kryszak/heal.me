@@ -4,6 +4,7 @@ import net.kryszak.healme.common.exception.ExceptionMapper
 import net.kryszak.healme.doctor.CreateDoctorCommand
 import net.kryszak.healme.doctor.GetDoctorQuery
 import net.kryszak.healme.doctor.GetDoctorsQuery
+import net.kryszak.healme.doctor.UpdateDoctorCommand
 import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
 import org.springframework.data.web.PageableDefault
@@ -18,6 +19,7 @@ class DoctorController(
     private val createDoctorCommand: CreateDoctorCommand,
     private val getDoctorsQuery: GetDoctorsQuery,
     private val getDoctorQuery: GetDoctorQuery,
+    private val updateDoctorCommand: UpdateDoctorCommand,
     private val exceptionMapper: ExceptionMapper,
 ) {
 
@@ -47,4 +49,15 @@ class DoctorController(
             )
         ).fold(exceptionMapper::mapExceptionToDto) { ResponseEntity.status(HttpStatus.CREATED).build() }
 
+    @PutMapping("/{doctorId}")
+    fun updateDoctor(@PathVariable doctorId: Long, @RequestBody dto: UpdateDoctorDto): ResponseEntity<*> =
+        updateDoctorCommand.execute(
+            UpdateDoctorCommand.Input(
+                doctorId,
+                dto.id,
+                dto.name,
+                dto.surname,
+                dto.specialization,
+            )
+        ).fold(exceptionMapper::mapExceptionToDto) { ResponseEntity.ok(it) }
 }

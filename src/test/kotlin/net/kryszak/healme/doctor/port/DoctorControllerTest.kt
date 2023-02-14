@@ -15,6 +15,7 @@ import org.springframework.test.context.jdbc.Sql
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.get
 import org.springframework.test.web.servlet.post
+import org.springframework.test.web.servlet.put
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -110,6 +111,73 @@ class DoctorControllerTest : ShouldSpec() {
                 header("x-api-key", "test")
             }.andExpect {
                 status { isNotFound() }
+            }
+        }
+
+        should("update doctor") {
+            //given
+            val doctorId = doctorStore.saveDoctor(
+                CreateDoctorParams(
+                    DOCTOR_NAME,
+                    DOCTOR_SURNAME,
+                    DOCTOR_SPECIALIZATION,
+                    TenantId(UUID.fromString("1bfcfd37-eafa-414a-94be-b377c7399a39"))
+                )
+            )
+                .map(Doctor::id)
+                .getOrNull() ?: throw Exception()
+            val request = UpdateDoctorDto(doctorId, "New name", "New Surname", "another specialization")
+
+            //when & then
+            mockMvc.put("/doctors/$doctorId") {
+                header("x-api-key", "test")
+                contentType = MediaType.APPLICATION_JSON
+                content = objectMapper.writeValueAsString(request)
+            }.andExpect {
+                status { isOk() }
+                content { contentType(MediaType.APPLICATION_JSON) }
+                content { jsonPath("\$.name") { value("New name") } }
+                content { jsonPath("\$.surname") { value("New Surname") } }
+                content { jsonPath("\$.specialization") { value("another specialization") } }
+            }
+        }
+
+        should("return 404 if attempted to update non existing doctor") {
+            //given
+            val doctorId = 10000L
+            val request = UpdateDoctorDto(doctorId, "New name", "New Surname", "another address")
+
+            //when & then
+            mockMvc.put("/doctors/$doctorId") {
+                header("x-api-key", "test")
+                contentType = MediaType.APPLICATION_JSON
+                content = objectMapper.writeValueAsString(request)
+            }.andExpect {
+                status { isNotFound() }
+            }
+        }
+
+        should("return 400 if attempted to update doctor with id other than provided in url") {
+            //given
+            val doctorId = doctorStore.saveDoctor(
+                CreateDoctorParams(
+                    DOCTOR_NAME,
+                    DOCTOR_SURNAME,
+                    DOCTOR_SPECIALIZATION,
+                    TenantId(UUID.fromString("1bfcfd37-eafa-414a-94be-b377c7399a39"))
+                )
+            )
+                .map(Doctor::id)
+                .getOrNull() ?: throw Exception()
+            val request = UpdateDoctorDto(2L, "New name", "New Surname", "another address")
+
+            //when & then
+            mockMvc.put("/doctors/$doctorId") {
+                header("x-api-key", "test")
+                contentType = MediaType.APPLICATION_JSON
+                content = objectMapper.writeValueAsString(request)
+            }.andExpect {
+                status { isBadRequest() }
             }
         }
     }

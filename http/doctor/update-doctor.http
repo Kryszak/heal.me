@@ -1,0 +1,10 @@
+PUT http://localhost:8080/doctors/3
+x-api-key: test
+Content-Type: application/json
+
+{
+  "id": 3,
+  "name": "Andrzej",
+  "surname": "Nowacki",
+  "specialization": "Dentysta"
+}

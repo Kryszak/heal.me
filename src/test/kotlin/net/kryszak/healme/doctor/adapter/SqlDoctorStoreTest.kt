@@ -78,4 +78,16 @@ class SqlDoctorStoreTest : ShouldSpec({
         //then
         result shouldBeLeft DataNotFoundException("Doctor with id={$DOCTOR_ID} not found under owner={$DOCTOR_OWNER}")
     }
+
+    should("update doctor") {
+        //given
+        val doctor = testDoctor()
+        every { doctorRepository.save(testDoctorEntity()) } returns testDoctorEntity()
+
+        //when
+        val result = doctorStore.updateDoctor(doctor)
+
+        //then
+        result shouldBeRight doctor
+    }
 })

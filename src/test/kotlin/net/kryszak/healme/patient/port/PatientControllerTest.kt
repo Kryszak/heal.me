@@ -142,7 +142,7 @@ class PatientControllerTest : ShouldSpec() {
             }
         }
 
-        should("return 404 if attempted to update non existing user") {
+        should("return 404 if attempted to update non existing patient") {
             //given
             val patientId = 10000L
             val request = UpdatePatientDto(patientId, "New name", "New Surname", "another address")
@@ -157,7 +157,7 @@ class PatientControllerTest : ShouldSpec() {
             }
         }
 
-        should("return 400 if attempted to update another with id other than provided in url") {
+        should("return 400 if attempted to update patient with id other than provided in url") {
             //given
             val patientId = patientStore.savePatient(
                 CreatePatientParams(

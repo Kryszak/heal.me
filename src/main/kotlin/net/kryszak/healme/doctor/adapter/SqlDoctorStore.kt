@@ -27,4 +27,10 @@ class SqlDoctorStore(
                 ?: throw DataNotFoundException("Doctor with id={$doctorId} not found under owner={$tenantId}")
         }.map(DoctorEntity::toDomain)
 
+    override fun updateDoctor(doctor: Doctor): Either<Throwable, Doctor> =
+        Either.catch {
+            DoctorEntity.fromDomain(doctor)
+                .let(doctorRepository::save)
+        }.map(DoctorEntity::toDomain)
+
 }
