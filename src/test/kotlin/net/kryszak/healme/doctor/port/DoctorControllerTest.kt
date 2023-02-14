@@ -12,10 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.MediaType
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.jdbc.Sql
-import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.get
-import org.springframework.test.web.servlet.post
-import org.springframework.test.web.servlet.put
+import org.springframework.test.web.servlet.*
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -178,6 +175,36 @@ class DoctorControllerTest : ShouldSpec() {
                 content = objectMapper.writeValueAsString(request)
             }.andExpect {
                 status { isBadRequest() }
+            }
+        }
+
+        should("delete given doctor") {
+            //given
+            val doctorId = doctorStore.saveDoctor(
+                CreateDoctorParams(
+                    DOCTOR_NAME,
+                    DOCTOR_SURNAME,
+                    DOCTOR_SPECIALIZATION,
+                    TenantId(UUID.fromString("1bfcfd37-eafa-414a-94be-b377c7399a39"))
+                )
+            )
+                .map(Doctor::id)
+                .getOrNull()
+
+            //when & then
+            mockMvc.delete("/doctors/$doctorId") {
+                header("x-api-key", "test")
+            }.andExpect {
+                status { isNoContent() }
+            }
+        }
+
+        should("return 404 if attempted to delete not existing doctor") {
+            //when & then
+            mockMvc.delete("/doctors/10000") {
+                header("x-api-key", "test")
+            }.andExpect {
+                status { isNotFound() }
             }
         }
     }

@@ -1,10 +1,7 @@
 package net.kryszak.healme.doctor.port
 
 import net.kryszak.healme.common.exception.ExceptionMapper
-import net.kryszak.healme.doctor.CreateDoctorCommand
-import net.kryszak.healme.doctor.GetDoctorQuery
-import net.kryszak.healme.doctor.GetDoctorsQuery
-import net.kryszak.healme.doctor.UpdateDoctorCommand
+import net.kryszak.healme.doctor.*
 import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
 import org.springframework.data.web.PageableDefault
@@ -20,6 +17,7 @@ class DoctorController(
     private val getDoctorsQuery: GetDoctorsQuery,
     private val getDoctorQuery: GetDoctorQuery,
     private val updateDoctorCommand: UpdateDoctorCommand,
+    private val deleteDoctorCommand: DeleteDoctorCommand,
     private val exceptionMapper: ExceptionMapper,
 ) {
 
@@ -60,4 +58,9 @@ class DoctorController(
                 dto.specialization,
             )
         ).fold(exceptionMapper::mapExceptionToDto) { ResponseEntity.ok(it) }
+
+    @DeleteMapping("/{doctorId}")
+    fun deleteDoctor(@PathVariable doctorId: Long): ResponseEntity<*> =
+        deleteDoctorCommand.execute(DeleteDoctorCommand.Input(doctorId))
+            .fold(exceptionMapper::mapExceptionToDto) { ResponseEntity.noContent().build() }
 }

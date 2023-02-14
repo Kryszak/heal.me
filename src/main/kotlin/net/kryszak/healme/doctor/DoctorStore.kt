@@ -14,6 +14,8 @@ interface DoctorStore {
     fun findDoctor(tenantId: TenantId, doctorId: Long): Either<Throwable, Doctor>
 
     fun updateDoctor(doctor: Doctor): Either<Throwable, Doctor>
+
+    fun deleteDoctor(doctor: Doctor): Either<Throwable, Unit>
 }
 
 data class CreateDoctorParams(

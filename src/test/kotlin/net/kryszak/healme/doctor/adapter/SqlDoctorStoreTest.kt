@@ -90,4 +90,16 @@ class SqlDoctorStoreTest : ShouldSpec({
         //then
         result shouldBeRight doctor
     }
+
+    should("delete doctor") {
+        //given
+        val doctor = testDoctor()
+        every { doctorRepository.delete(DoctorEntity.fromDomain(doctor)) } returns Unit
+
+        //when
+        val result = doctorStore.deleteDoctor(doctor)
+
+        //then
+        result.shouldBeRight()
+    }
 })

@@ -33,4 +33,7 @@ class SqlDoctorStore(
                 .let(doctorRepository::save)
         }.map(DoctorEntity::toDomain)
 
+    override fun deleteDoctor(doctor: Doctor): Either<Throwable, Unit> =
+        Either.catch { doctorRepository.delete(DoctorEntity.fromDomain(doctor)) }
+
 }
