@@ -1,16 +1,16 @@
-package net.kryszak.healme.patient.adapter
+package net.kryszak.healme.doctor.adapter
 
 import java.util.UUID
 import javax.persistence.*
 import net.kryszak.healme.authentication.TenantId
-import net.kryszak.healme.patient.CreatePatientParams
-import net.kryszak.healme.patient.Patient
+import net.kryszak.healme.doctor.CreateDoctorParams
+import net.kryszak.healme.doctor.Doctor
 import org.hibernate.Hibernate
 import org.hibernate.annotations.Type
 
 @Entity
-@Table(name = "patient")
-class PatientEntity {
+@Table(name = "doctor")
+class DoctorEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -20,17 +20,17 @@ class PatientEntity {
 
     lateinit var surname: String
 
-    lateinit var address: String
+    lateinit var specialization: String
 
     @Type(type = "uuid-char")
     lateinit var owner: UUID
 
-    fun toDomain() = Patient(id, name, surname, address, TenantId(owner))
+    fun toDomain() = Doctor(id, name, surname, specialization, TenantId(owner))
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other == null || Hibernate.getClass(this) != Hibernate.getClass(other)) return false
-        other as PatientEntity
+        other as DoctorEntity
 
         return id == other.id
     }
@@ -38,19 +38,19 @@ class PatientEntity {
     override fun hashCode(): Int = id.hashCode()
 
     companion object {
-        fun fromParams(params: CreatePatientParams) = PatientEntity().apply {
+        fun fromParams(params: CreateDoctorParams) = DoctorEntity().apply {
             name = params.name
             surname = params.surname
-            address = params.address
+            specialization = params.specialization
             owner = params.owner.value
         }
 
-        fun fromDomain(patient: Patient) = PatientEntity().apply {
-            id = patient.id
-            name = patient.name
-            surname = patient.surname
-            address = patient.address
-            owner = patient.owner.value
+        fun fromDomain(doctor: Doctor) = DoctorEntity().apply {
+            id = doctor.id
+            name = doctor.name
+            surname = doctor.surname
+            specialization = doctor.specialization
+            owner = doctor.owner.value
         }
     }
 }

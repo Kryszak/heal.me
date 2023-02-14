@@ -1,13 +1,13 @@
-package net.kryszak.healme.patient
+package net.kryszak.healme.doctor
 
 import net.kryszak.healme.authentication.TenantId
 
-data class Patient(
+data class Doctor(
     val id: Long,
     val name: String,
     val surname: String,
-    // NOTE: this should be a proper value class. For simplicity reason,
+    // NOTE: this should be a proper enum class. For simplicity reason,
     // it's handled as single string field
-    val address: String,
+    val specialization: String,
     val owner: TenantId,
 )

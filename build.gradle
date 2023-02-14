@@ -42,7 +42,6 @@ dependencies {
 
     runtimeOnly "org.postgresql:postgresql"
 
-//    runtimeOnly 'io.kotest:kotest-framework-engine-jvm:5.4.2'
     testImplementation "org.springframework.boot:spring-boot-starter-test"
     testImplementation "io.kotest:kotest-runner-junit5-jvm:$kotestVersion"
     testImplementation "io.kotest:kotest-assertions-core-jvm:$kotestVersion"
