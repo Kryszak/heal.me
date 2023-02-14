@@ -5,6 +5,7 @@ import io.kotest.assertions.arrow.core.shouldBeRight
 import io.kotest.core.spec.style.ShouldSpec
 import io.mockk.every
 import io.mockk.mockk
+import net.kryszak.healme.common.exception.DataNotFoundException
 import net.kryszak.healme.doctor.*
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
@@ -54,5 +55,27 @@ class SqlDoctorStoreTest : ShouldSpec({
 
         //then
         result shouldBeRight PageImpl(listOf(testDoctor()))
+    }
+
+    should("find doctor") {
+        //given
+        every { doctorRepository.findByIdAndOwner(DOCTOR_ID, DOCTOR_OWNER.value) } returns testDoctorEntity()
+
+        //when
+        val result = doctorStore.findDoctor(DOCTOR_OWNER, DOCTOR_ID)
+
+        //then
+        result shouldBeRight testDoctor()
+    }
+
+    should("return error if doctor is not found") {
+        //given
+        every { doctorRepository.findByIdAndOwner(DOCTOR_ID, DOCTOR_OWNER.value) } returns null
+
+        //when
+        val result = doctorStore.findDoctor(DOCTOR_OWNER, DOCTOR_ID)
+
+        //then
+        result shouldBeLeft DataNotFoundException("Doctor with id={$DOCTOR_ID} not found under owner={$DOCTOR_OWNER}")
     }
 })

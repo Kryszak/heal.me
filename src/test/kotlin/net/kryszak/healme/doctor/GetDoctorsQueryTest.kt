@@ -19,19 +19,19 @@ class GetDoctorsQueryTest : ShouldSpec({
         //given
         val pageable = Pageable.unpaged()
         every { tenantStore.getCurrentTenant() } returns Either.Right(DOCTOR_OWNER)
-        val pagedPatients = PageImpl(listOf(testDoctor()))
+        val pagedDoctors = PageImpl(listOf(testDoctor()))
         every {
             doctorStore.findDoctors(
                 DOCTOR_OWNER,
                 pageable
             )
-        } returns Either.Right(pagedPatients)
+        } returns Either.Right(pagedDoctors)
 
         //when
         val result = query.execute(GetDoctorsQuery.Input(pageable))
 
         //then
-        result shouldBeRight pagedPatients
+        result shouldBeRight pagedDoctors
     }
 
     should("return error when fetching doctors fails") {

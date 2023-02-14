@@ -1,0 +1,2 @@
+GET http://localhost:8080/doctors/3
+x-api-key: test

@@ -2,6 +2,7 @@ package net.kryszak.healme.doctor.port
 
 import net.kryszak.healme.common.exception.ExceptionMapper
 import net.kryszak.healme.doctor.CreateDoctorCommand
+import net.kryszak.healme.doctor.GetDoctorQuery
 import net.kryszak.healme.doctor.GetDoctorsQuery
 import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.*
 class DoctorController(
     private val createDoctorCommand: CreateDoctorCommand,
     private val getDoctorsQuery: GetDoctorsQuery,
+    private val getDoctorQuery: GetDoctorQuery,
     private val exceptionMapper: ExceptionMapper,
 ) {
 
@@ -27,6 +29,12 @@ class DoctorController(
     ): ResponseEntity<*> =
         getDoctorsQuery.execute(GetDoctorsQuery.Input(pageable))
             .map { it.map(DoctorDto::from) }
+            .fold(exceptionMapper::mapExceptionToDto) { ResponseEntity.ok(it) }
+
+    @GetMapping("/{doctorId}")
+    fun getDoctor(@PathVariable doctorId: Long): ResponseEntity<*> =
+        getDoctorQuery.execute(GetDoctorQuery.Input(doctorId))
+            .map(DoctorDto::from)
             .fold(exceptionMapper::mapExceptionToDto) { ResponseEntity.ok(it) }
 
     @PostMapping

@@ -13,7 +13,7 @@ class CreateDoctorCommandTest : ShouldSpec({
     val tenantStore = mockk<TenantStore>()
     val command = CreateDoctorCommand(doctorStore, tenantStore)
 
-    should("create new patient") {
+    should("create new doctor") {
         //given
         val input = CreateDoctorCommand.Input(DOCTOR_NAME, DOCTOR_SURNAME, DOCTOR_SPECIALIZATION)
         every { tenantStore.getCurrentTenant() } returns Either.Right(DOCTOR_OWNER)
@@ -35,7 +35,7 @@ class CreateDoctorCommandTest : ShouldSpec({
         result.shouldBeRight()
     }
 
-    should("return exception if creation of new patient fails") {
+    should("return exception if creation of new doctor fails") {
         //given
         val input = CreateDoctorCommand.Input(DOCTOR_NAME, DOCTOR_SURNAME, DOCTOR_SPECIALIZATION)
         val exception = Exception()
