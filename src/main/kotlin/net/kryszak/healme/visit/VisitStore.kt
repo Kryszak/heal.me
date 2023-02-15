@@ -11,6 +11,14 @@ interface VisitStore {
     fun saveVisit(params: CreateVisitParams): Either<Throwable, Visit>
 
     fun existsVisitInGivenTimeWindow(params: ExistsVisitInTimeWindowParams): Either<Throwable, Boolean>
+
+    fun findVisit(visitId: Long, tenantId: TenantId): Either<Throwable, Visit>
+
+    fun deleteByPatient(patientId: Long, tenantId: TenantId): Either<Throwable, Unit>
+
+    fun deleteByDoctor(doctorId: Long, tenantId: TenantId): Either<Throwable, Unit>
+
+    fun deleteVisit(visit: Visit): Either<Throwable, Unit>
 }
 
 data class CreateVisitParams(

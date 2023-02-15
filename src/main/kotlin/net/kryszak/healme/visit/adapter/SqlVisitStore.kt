@@ -1,6 +1,9 @@
 package net.kryszak.healme.visit.adapter
 
 import arrow.core.Either
+import javax.transaction.Transactional
+import net.kryszak.healme.authentication.TenantId
+import net.kryszak.healme.common.exception.DataNotFoundException
 import net.kryszak.healme.doctor.adapter.DoctorEntity
 import net.kryszak.healme.patient.adapter.PatientEntity
 import net.kryszak.healme.visit.CreateVisitParams
@@ -8,7 +11,7 @@ import net.kryszak.healme.visit.ExistsVisitInTimeWindowParams
 import net.kryszak.healme.visit.Visit
 import net.kryszak.healme.visit.VisitStore
 
-class SqlVisitStore(private val visitRepository: VisitRepository) : VisitStore {
+open class SqlVisitStore(private val visitRepository: VisitRepository) : VisitStore {
     override fun saveVisit(params: CreateVisitParams): Either<Throwable, Visit> =
         VisitEntity.fromParams(params)
             .let { Either.catch { visitRepository.save(it) } }
@@ -24,4 +27,23 @@ class SqlVisitStore(private val visitRepository: VisitRepository) : VisitStore {
             )
         }
 
+    @Transactional
+    override fun findVisit(visitId: Long, tenantId: TenantId): Either<Throwable, Visit> =
+        Either.catch {
+            visitRepository.findByIdAndOwner(visitId, tenantId.value)
+                ?: throw DataNotFoundException("Doctor with id={$visitId} not found under owner={$tenantId}")
+        }.map(VisitEntity::toDomain)
+
+    @Transactional
+    override fun deleteByPatient(patientId: Long, tenantId: TenantId): Either<Throwable, Unit> {
+        return Either.catch { visitRepository.deleteByPatientIdAndOwner(patientId, tenantId.value) }
+    }
+
+    @Transactional
+    override fun deleteByDoctor(doctorId: Long, tenantId: TenantId): Either<Throwable, Unit> {
+        return Either.catch { visitRepository.deleteByDoctorIdAndOwner(doctorId, tenantId.value) }
+    }
+
+    override fun deleteVisit(visit: Visit): Either<Throwable, Unit> =
+        Either.catch { visitRepository.delete(VisitEntity.fromDomain(visit)) }
 }

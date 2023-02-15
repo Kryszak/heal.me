@@ -11,14 +11,16 @@ import net.kryszak.healme.common.exception.DataNotFoundException
 
 class DeleteDoctorCommandTest : ShouldSpec({
     val doctorStore = mockk<DoctorStore>()
+    val visitStore = mockk<VisitStore>()
     val tenantStore = mockk<TenantStore>()
-    val command = DeleteDoctorCommand(doctorStore, tenantStore)
+    val command = DeleteDoctorCommand(doctorStore, visitStore, tenantStore)
 
     should("delete doctor") {
         //given
         val doctor = testDoctor()
         every { tenantStore.getCurrentTenant() } returns Either.Right(DOCTOR_OWNER)
         every { doctorStore.findDoctor(DOCTOR_OWNER, DOCTOR_ID) } returns Either.Right(doctor)
+        every { visitStore.deleteVisits(doctor.id) } returns Either.Right(Unit)
         every { doctorStore.deleteDoctor(doctor) } returns Either.Right(Unit)
 
         //when
@@ -45,6 +47,21 @@ class DeleteDoctorCommandTest : ShouldSpec({
         //given
         val exception = Exception()
         every { tenantStore.getCurrentTenant() } returns Either.Left(exception)
+
+        //when
+        val result = command.execute(DeleteDoctorCommand.Input(DOCTOR_ID))
+
+        //then
+        result shouldBeLeft exception
+    }
+
+    should("not delete doctor if doctor's visits deletion fails") {
+        //given
+        val doctor = testDoctor()
+        val exception = Exception()
+        every { tenantStore.getCurrentTenant() } returns Either.Right(DOCTOR_OWNER)
+        every { doctorStore.findDoctor(DOCTOR_OWNER, DOCTOR_ID) } returns Either.Right(doctor)
+        every { visitStore.deleteVisits(doctor.id) } returns Either.Left(exception)
 
         //when
         val result = command.execute(DeleteDoctorCommand.Input(DOCTOR_ID))

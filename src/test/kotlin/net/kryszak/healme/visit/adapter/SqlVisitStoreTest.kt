@@ -5,8 +5,12 @@ import io.kotest.core.spec.style.ShouldSpec
 import io.mockk.every
 import io.mockk.mockk
 import java.time.LocalDateTime
+import net.kryszak.healme.doctor.DOCTOR_ID
+import net.kryszak.healme.doctor.DOCTOR_OWNER
 import net.kryszak.healme.doctor.adapter.DoctorEntity
 import net.kryszak.healme.doctor.testDoctor
+import net.kryszak.healme.patient.PATIENT_ID
+import net.kryszak.healme.patient.PATIENT_OWNER
 import net.kryszak.healme.patient.adapter.PatientEntity
 import net.kryszak.healme.patient.testPatient
 import net.kryszak.healme.visit.*
@@ -81,5 +85,27 @@ class SqlVisitStoreTest : ShouldSpec({
 
         //then
         result shouldBeRight false
+    }
+
+    should("delete visits by patient id ") {
+        //given
+        every { visitRepository.deleteByPatientIdAndOwner(PATIENT_ID, PATIENT_OWNER.value) } returns 1L
+
+        //when
+        val result = visitStore.deleteByPatient(PATIENT_ID, PATIENT_OWNER)
+
+        //then
+        result.shouldBeRight()
+    }
+
+    should("delete visits by doctor id ") {
+        //given
+        every { visitRepository.deleteByDoctorIdAndOwner(DOCTOR_ID, DOCTOR_OWNER.value) } returns 1L
+
+        //when
+        val result = visitStore.deleteByDoctor(DOCTOR_ID, DOCTOR_OWNER)
+
+        //then
+        result.shouldBeRight()
     }
 })

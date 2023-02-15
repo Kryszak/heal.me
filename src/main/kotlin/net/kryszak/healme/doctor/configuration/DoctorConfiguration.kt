@@ -3,8 +3,10 @@ package net.kryszak.healme.doctor.configuration
 import net.kryszak.healme.common.TenantStore
 import net.kryszak.healme.doctor.*
 import net.kryszak.healme.doctor.adapter.DoctorRepository
+import net.kryszak.healme.doctor.adapter.LocalVisitStore
 import net.kryszak.healme.doctor.adapter.SqlDoctorStore
 import net.kryszak.healme.doctor.port.DoctorFacade
+import net.kryszak.healme.visit.port.VisitFacade
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
@@ -31,9 +33,12 @@ class DoctorConfiguration {
         UpdateDoctorCommand(doctorStore, commonTenantStore)
 
     @Bean
-    fun deleteDoctorCommand(doctorStore: DoctorStore, commonTenantStore: TenantStore) =
-        DeleteDoctorCommand(doctorStore, commonTenantStore)
+    fun deleteDoctorCommand(doctorStore: DoctorStore, doctorVisitStore: VisitStore, commonTenantStore: TenantStore) =
+        DeleteDoctorCommand(doctorStore, doctorVisitStore, commonTenantStore)
 
     @Bean
-    fun doctorFacade(getDoctorQuery: net.kryszak.healme.doctor.GetDoctorQuery) = DoctorFacade(getDoctorQuery)
+    fun doctorFacade(getDoctorQuery: GetDoctorQuery) = DoctorFacade(getDoctorQuery)
+
+    @Bean
+    fun doctorVisitStore(visitFacade: VisitFacade): VisitStore = LocalVisitStore(visitFacade)
 }

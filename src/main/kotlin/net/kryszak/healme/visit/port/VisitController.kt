@@ -5,15 +5,15 @@ import arrow.core.flatMap
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import net.kryszak.healme.visit.CreateVisitCommand
+import net.kryszak.healme.visit.DeleteVisitCommand
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 @RestController
 class VisitController(
     private val createVisitCommand: CreateVisitCommand,
+    private val deleteVisitCommand: DeleteVisitCommand,
     private val exceptionMapper: VisitExceptionMapper
 ) {
 
@@ -34,4 +34,8 @@ class VisitController(
             .flatMap(createVisitCommand::execute)
             .fold(exceptionMapper::mapExceptionToResponse) { ResponseEntity.status(HttpStatus.CREATED).build() }
 
+    @DeleteMapping("/visits/{visitId}")
+    fun deleteVisit(@PathVariable visitId: Long) =
+        deleteVisitCommand.execute(DeleteVisitCommand.Input(visitId))
+            .fold(exceptionMapper::mapExceptionToResponse) { ResponseEntity.noContent().build() }
 }
