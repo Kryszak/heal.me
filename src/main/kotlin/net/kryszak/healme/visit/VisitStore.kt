@@ -25,6 +25,8 @@ interface VisitStore {
     fun deleteByDoctor(doctorId: Long, tenantId: TenantId): Either<Throwable, Unit>
 
     fun deleteVisit(visit: Visit): Either<Throwable, Unit>
+
+    fun updateVisit(visit: Visit): Either<Throwable, Visit>
 }
 
 data class CreateVisitParams(

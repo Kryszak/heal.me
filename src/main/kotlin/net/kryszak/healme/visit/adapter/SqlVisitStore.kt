@@ -59,4 +59,9 @@ open class SqlVisitStore(private val visitRepository: VisitRepository) : VisitSt
 
     override fun deleteVisit(visit: Visit): Either<Throwable, Unit> =
         Either.catch { visitRepository.delete(VisitEntity.fromDomain(visit)) }
+
+    override fun updateVisit(visit: Visit): Either<Throwable, Visit> = Either.catch {
+        VisitEntity.fromDomain(visit)
+            .let(visitRepository::save)
+    }.map(VisitEntity::toDomain)
 }

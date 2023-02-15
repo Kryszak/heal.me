@@ -57,5 +57,12 @@ class VisitConfiguration {
         GetPatientVisitsQuery(visitStore, commonTenantStore)
 
     @Bean
+    fun updateVisitTimeCommand(
+        visitStore: VisitStore,
+        commonTenantStore: TenantStore,
+        @Value("\${healme.visit-duration}") visitDuration: Duration
+    ) = UpdateVisitTimeCommand(visitStore, commonTenantStore, visitDuration)
+
+    @Bean
     fun visitFacade(deleteVisitsCommand: DeleteVisitsCommand) = VisitFacade(deleteVisitsCommand)
 }

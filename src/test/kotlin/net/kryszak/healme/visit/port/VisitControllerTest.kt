@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import io.kotest.core.spec.style.ShouldSpec
 import io.kotest.extensions.spring.SpringExtension
 import java.time.LocalDateTime
+import java.time.LocalTime
+import java.time.format.DateTimeFormatter
 import java.util.UUID
 import net.kryszak.healme.authentication.TenantId
 import net.kryszak.healme.doctor.*
@@ -17,10 +19,7 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.MediaType
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.jdbc.Sql
-import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.delete
-import org.springframework.test.web.servlet.get
-import org.springframework.test.web.servlet.post
+import org.springframework.test.web.servlet.*
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -231,6 +230,49 @@ class VisitControllerTest : ShouldSpec() {
                 content { jsonPath("\$.content[0].place") { isNotEmpty() } }
                 content { jsonPath("\$.content[0].doctor") { isNotEmpty() } }
                 content { jsonPath("\$.content[0].patient") { isNotEmpty() } }
+            }
+        }
+
+        should("update time for given visit") {
+            //given
+            val request = UpdateVisitTimeDto(LocalTime.now().plusHours(1L).format(DateTimeFormatter.ofPattern("HH:mm")))
+            val patient = patientStore.savePatient(
+                CreatePatientParams(
+                    PATIENT_NAME,
+                    PATIENT_SURNAME,
+                    PATIENT_ADDRESS,
+                    TenantId(UUID.fromString("1bfcfd37-eafa-414a-94be-b377c7399a39"))
+                )
+            ).getOrNull()!!
+
+            val doctor = doctorStore.saveDoctor(
+                CreateDoctorParams(
+                    DOCTOR_NAME,
+                    DOCTOR_SURNAME,
+                    DOCTOR_SPECIALIZATION,
+                    TenantId(UUID.fromString("1bfcfd37-eafa-414a-94be-b377c7399a39"))
+                )
+            ).getOrNull()!!
+
+            val visitId = visitStore.saveVisit(
+                CreateVisitParams(
+                    LocalDateTime.now(),
+                    "place",
+                    doctor,
+                    patient,
+                    TenantId(UUID.fromString("1bfcfd37-eafa-414a-94be-b377c7399a39"))
+                )
+            )
+                .map(Visit::id)
+                .getOrNull()
+
+            //when & then
+            mockMvc.patch("/visits/$visitId") {
+                header("x-api-key", "test")
+                contentType = MediaType.APPLICATION_JSON
+                content = objectMapper.writeValueAsString(request)
+            }.andExpect {
+                status { isNoContent() }
             }
         }
     }

@@ -1,0 +1,7 @@
+PATCH http://localhost:8080/visits/11
+x-api-key: test
+Content-Type: application/json
+
+{
+  "time": "17:31"
+}

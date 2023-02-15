@@ -156,4 +156,16 @@ class SqlVisitStoreTest : ShouldSpec({
         //then
         result shouldBeRight PageImpl(listOf(testVisit()))
     }
+
+    should("update visit") {
+        //given
+        val visit = testVisit()
+        every { visitRepository.save(testVisitEntity()) } returns testVisitEntity()
+
+        //when
+        val result = visitStore.updateVisit(visit)
+
+        //then
+        result shouldBeRight visit
+    }
 })

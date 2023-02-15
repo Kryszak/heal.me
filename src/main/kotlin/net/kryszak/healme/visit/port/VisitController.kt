@@ -3,11 +3,9 @@ package net.kryszak.healme.visit.port
 import arrow.core.Either
 import arrow.core.flatMap
 import java.time.LocalDateTime
+import java.time.LocalTime
 import java.time.format.DateTimeFormatter
-import net.kryszak.healme.visit.CreateVisitCommand
-import net.kryszak.healme.visit.DeleteVisitCommand
-import net.kryszak.healme.visit.GetPatientVisitsQuery
-import net.kryszak.healme.visit.GetVisitsQuery
+import net.kryszak.healme.visit.*
 import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
 import org.springframework.data.web.PageableDefault
@@ -21,12 +19,14 @@ class VisitController(
     private val createVisitCommand: CreateVisitCommand,
     private val getVisitsQuery: GetVisitsQuery,
     private val getPatientVisitsQuery: GetPatientVisitsQuery,
+    private val updateVisitTimeCommand: UpdateVisitTimeCommand,
     private val deleteVisitCommand: DeleteVisitCommand,
     private val exceptionMapper: VisitExceptionMapper
 ) {
 
     private companion object {
         val DATE_TIME_FORMATTER: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
+        val TIME_FORMATTER: DateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm")
     }
 
     @PostMapping("/visits")
@@ -62,6 +62,15 @@ class VisitController(
         getPatientVisitsQuery.execute(GetPatientVisitsQuery.Input(patientId, pageable))
             .map { it.map(VisitDto::from) }
             .fold(exceptionMapper::mapExceptionToResponse) { ResponseEntity.ok(it) }
+
+    @PatchMapping("/visits/{visitId}")
+    fun updateVisitTime(
+        @PathVariable visitId: Long,
+        @RequestBody dto: UpdateVisitTimeDto
+    ): ResponseEntity<*> =
+        Either.catch { UpdateVisitTimeCommand.Input(visitId, LocalTime.parse(dto.time, TIME_FORMATTER)) }
+            .flatMap(updateVisitTimeCommand::execute)
+            .fold(exceptionMapper::mapExceptionToResponse) { ResponseEntity.noContent().build() }
 
     @DeleteMapping("/visits/{visitId}")
     fun deleteVisit(@PathVariable visitId: Long) =
