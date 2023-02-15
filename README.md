@@ -5,5 +5,10 @@
 # heal.me
 ## Development
 For development purposes there is docker compose setup for local PostgreSQL db setup.
+
 Before running server with either `./gradlew bootRun` or provided Intellij IDEA run configuration
-run `docker-compose up` in project directory
+run 
+```
+docker-compose up
+``` 
+in project directory
