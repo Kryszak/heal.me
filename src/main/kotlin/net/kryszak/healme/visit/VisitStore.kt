@@ -5,6 +5,8 @@ import java.time.LocalDateTime
 import net.kryszak.healme.authentication.TenantId
 import net.kryszak.healme.doctor.Doctor
 import net.kryszak.healme.patient.Patient
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 
 interface VisitStore {
 
@@ -13,6 +15,8 @@ interface VisitStore {
     fun existsVisitInGivenTimeWindow(params: ExistsVisitInTimeWindowParams): Either<Throwable, Boolean>
 
     fun findVisit(visitId: Long, tenantId: TenantId): Either<Throwable, Visit>
+
+    fun findVisits(tenantId: TenantId, pageable: Pageable): Either<Throwable, Page<Visit>>
 
     fun deleteByPatient(patientId: Long, tenantId: TenantId): Either<Throwable, Unit>
 

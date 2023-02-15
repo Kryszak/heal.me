@@ -139,5 +139,51 @@ class VisitControllerTest : ShouldSpec() {
                 status { isNotFound() }
             }
         }
+
+        should("retrieve visit list") {
+            //given
+            val patient = patientStore.savePatient(
+                CreatePatientParams(
+                    PATIENT_NAME,
+                    PATIENT_SURNAME,
+                    PATIENT_ADDRESS,
+                    TenantId(UUID.fromString("1bfcfd37-eafa-414a-94be-b377c7399a39"))
+                )
+            ).getOrNull()!!
+
+            val doctorId = doctorStore.saveDoctor(
+                CreateDoctorParams(
+                    DOCTOR_NAME,
+                    DOCTOR_SURNAME,
+                    DOCTOR_SPECIALIZATION,
+                    TenantId(UUID.fromString("1bfcfd37-eafa-414a-94be-b377c7399a39"))
+                )
+            ).getOrNull()!!
+
+            visitStore.saveVisit(
+                CreateVisitParams(
+                    LocalDateTime.now(),
+                    "place",
+                    doctorId,
+                    patient,
+                    TenantId(UUID.fromString("1bfcfd37-eafa-414a-94be-b377c7399a39"))
+                )
+            )
+                .map(Visit::id)
+                .getOrNull()
+
+            //when & then
+            mockMvc.get("/visits") {
+                header("x-api-key", "test")
+            }.andExpect {
+                status { isOk() }
+                content { contentType(MediaType.APPLICATION_JSON) }
+                content { jsonPath("\$.content[0].id") { isNotEmpty() } }
+                content { jsonPath("\$.content[0].dateTime") { isNotEmpty() } }
+                content { jsonPath("\$.content[0].place") { isNotEmpty() } }
+                content { jsonPath("\$.content[0].doctor") { isNotEmpty() } }
+                content { jsonPath("\$.content[0].patient") { isNotEmpty() } }
+            }
+        }
     }
 }

@@ -6,7 +6,7 @@ data class Patient(
     val id: Long,
     val name: String,
     val surname: String,
-    // NOTE: this should be a proper value class. For simplicity reason,
+    // NOTE: this should be a proper value object. For simplicity reason,
     // it's handled as single string field
     val address: String,
     val owner: TenantId,

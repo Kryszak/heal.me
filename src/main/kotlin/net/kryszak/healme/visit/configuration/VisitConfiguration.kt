@@ -49,5 +49,9 @@ class VisitConfiguration {
         DeleteVisitCommand(visitStore, commonTenantStore)
 
     @Bean
+    fun getVisitsQuery(visitStore: VisitStore, commonTenantStore: TenantStore) =
+        GetVisitsQuery(visitStore, commonTenantStore)
+
+    @Bean
     fun visitFacade(deleteVisitsCommand: DeleteVisitsCommand) = VisitFacade(deleteVisitsCommand)
 }

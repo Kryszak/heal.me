@@ -10,6 +10,8 @@ import net.kryszak.healme.visit.CreateVisitParams
 import net.kryszak.healme.visit.ExistsVisitInTimeWindowParams
 import net.kryszak.healme.visit.Visit
 import net.kryszak.healme.visit.VisitStore
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 
 open class SqlVisitStore(private val visitRepository: VisitRepository) : VisitStore {
     override fun saveVisit(params: CreateVisitParams): Either<Throwable, Visit> =
@@ -33,6 +35,12 @@ open class SqlVisitStore(private val visitRepository: VisitRepository) : VisitSt
             visitRepository.findByIdAndOwner(visitId, tenantId.value)
                 ?: throw DataNotFoundException("Doctor with id={$visitId} not found under owner={$tenantId}")
         }.map(VisitEntity::toDomain)
+
+    @Transactional
+    override fun findVisits(tenantId: TenantId, pageable: Pageable): Either<Throwable, Page<Visit>> {
+        return Either.catch { visitRepository.findAllByOwner(tenantId.value, pageable) }
+            .map { it.map(VisitEntity::toDomain) }
+    }
 
     @Transactional
     override fun deleteByPatient(patientId: Long, tenantId: TenantId): Either<Throwable, Unit> {

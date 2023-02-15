@@ -14,6 +14,8 @@ import net.kryszak.healme.patient.PATIENT_OWNER
 import net.kryszak.healme.patient.adapter.PatientEntity
 import net.kryszak.healme.patient.testPatient
 import net.kryszak.healme.visit.*
+import org.springframework.data.domain.PageImpl
+import org.springframework.data.domain.Pageable
 
 class SqlVisitStoreTest : ShouldSpec({
     val visitRepository = mockk<VisitRepository>()
@@ -107,5 +109,33 @@ class SqlVisitStoreTest : ShouldSpec({
 
         //then
         result.shouldBeRight()
+    }
+
+    should("retrieve visits list") {
+        //given
+        val pageable = Pageable.unpaged()
+        every {
+            visitRepository.findAllByOwner(
+                VISIT_OWNER.value,
+                pageable
+            )
+        } returns PageImpl(listOf(testVisitEntity()))
+
+        //when
+        val result = visitStore.findVisits(VISIT_OWNER, pageable)
+
+        //then
+        result shouldBeRight PageImpl(listOf(testVisit()))
+    }
+
+    should("find visit") {
+        //given
+        every { visitRepository.findByIdAndOwner(VISIT_ID, VISIT_OWNER.value) } returns testVisitEntity()
+
+        //when
+        val result = visitStore.findVisit(VISIT_ID, VISIT_OWNER)
+
+        //then
+        result shouldBeRight testVisit()
     }
 })

@@ -6,6 +6,6 @@ Content-Type: application/json
   "date": "2023-02-15",
   "time": "16:31",
   "place": "Klinika Najlepsza",
-  "doctorId": 4,
+  "doctorId": 5,
   "patientId": 1
 }

@@ -15,5 +15,10 @@ class GetDoctorsQuery(
         tenantStore.getCurrentTenant()
             .flatMap { doctorStore.findDoctors(it, input.pageable) }
 
+    // NOTE: this domain class should not depend on framework classes(Pageable)
+    // This class breaks this rule for following reason:
+    // to avoid manual mapping of query parameters coming from port layer
+    // so the whole app development process would be faster, as framework
+    // provides out-of-the-box functionality for sorting and paging
     data class Input(val pageable: Pageable)
 }
