@@ -30,13 +30,13 @@ class PatientController(
     ): ResponseEntity<*> =
         getPatientsQuery.execute(Input(pageable))
             .map { it.map(PatientDto::from) }
-            .fold(exceptionMapper::mapExceptionToDto) { ResponseEntity.ok(it) }
+            .fold(exceptionMapper::mapExceptionToResponse) { ResponseEntity.ok(it) }
 
     @GetMapping("/{patientId}")
     fun getPatient(@PathVariable patientId: Long): ResponseEntity<*> =
         getPatientQuery.execute(GetPatientQuery.Input(patientId))
             .map(PatientDto::from)
-            .fold(exceptionMapper::mapExceptionToDto) { ResponseEntity.ok(it) }
+            .fold(exceptionMapper::mapExceptionToResponse) { ResponseEntity.ok(it) }
 
     @PostMapping
     fun createPatient(@RequestBody dto: CreatePatientDto): ResponseEntity<*> =
@@ -46,7 +46,7 @@ class PatientController(
                 dto.surname,
                 dto.address
             )
-        ).fold(exceptionMapper::mapExceptionToDto) { ResponseEntity.status(HttpStatus.CREATED).build() }
+        ).fold(exceptionMapper::mapExceptionToResponse) { ResponseEntity.status(HttpStatus.CREATED).build() }
 
     @PutMapping("/{patientId}")
     fun updatePatient(@PathVariable patientId: Long, @RequestBody dto: UpdatePatientDto): ResponseEntity<*> =
@@ -58,10 +58,10 @@ class PatientController(
                 dto.surname,
                 dto.address,
             )
-        ).fold(exceptionMapper::mapExceptionToDto) { ResponseEntity.ok(it) }
+        ).fold(exceptionMapper::mapExceptionToResponse) { ResponseEntity.ok(it) }
 
     @DeleteMapping("/{patientId}")
     fun deletePatient(@PathVariable patientId: Long): ResponseEntity<*> =
         deletePatientCommand.execute(DeletePatientCommand.Input(patientId))
-            .fold(exceptionMapper::mapExceptionToDto) { ResponseEntity.noContent().build() }
+            .fold(exceptionMapper::mapExceptionToResponse) { ResponseEntity.noContent().build() }
 }

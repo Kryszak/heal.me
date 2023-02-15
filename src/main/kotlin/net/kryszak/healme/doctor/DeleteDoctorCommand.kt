@@ -9,6 +9,7 @@ class DeleteDoctorCommand(
     private val tenantStore: TenantStore
 ) {
 
+    //TODO remove all visits assigned to given doctor before removing doctor
     fun execute(input: Input): Either<Throwable, Unit> {
         return tenantStore.getCurrentTenant()
             .flatMap { doctorStore.findDoctor(it, input.doctorId) }

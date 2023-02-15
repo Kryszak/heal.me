@@ -7,7 +7,6 @@ spring:
   main:
     allow-bean-definition-overriding: true
 
-
 logging:
   level:
     net.kryszak.healme: DEBUG

@@ -4,6 +4,7 @@ import net.kryszak.healme.common.TenantStore
 import net.kryszak.healme.doctor.*
 import net.kryszak.healme.doctor.adapter.DoctorRepository
 import net.kryszak.healme.doctor.adapter.SqlDoctorStore
+import net.kryszak.healme.doctor.port.DoctorFacade
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
@@ -32,4 +33,7 @@ class DoctorConfiguration {
     @Bean
     fun deleteDoctorCommand(doctorStore: DoctorStore, commonTenantStore: TenantStore) =
         DeleteDoctorCommand(doctorStore, commonTenantStore)
+
+    @Bean
+    fun doctorFacade(getDoctorQuery: net.kryszak.healme.doctor.GetDoctorQuery) = DoctorFacade(getDoctorQuery)
 }

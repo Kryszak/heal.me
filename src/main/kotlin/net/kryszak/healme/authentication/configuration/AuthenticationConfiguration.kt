@@ -4,6 +4,7 @@ import net.kryszak.healme.authentication.GetTenantQuery
 import net.kryszak.healme.authentication.TenantStore
 import net.kryszak.healme.authentication.adapter.SqlTenantStore
 import net.kryszak.healme.authentication.adapter.TenantRepository
+import net.kryszak.healme.authentication.port.AuthenticationFacade
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
@@ -24,6 +25,9 @@ class AuthenticationConfiguration {
 
     @Bean
     fun getTenantQuery(tenantStore: TenantStore) = GetTenantQuery(tenantStore)
+
+    @Bean
+    fun authenticationFacade(getTenantQuery: GetTenantQuery) = AuthenticationFacade(getTenantQuery)
 
     @Bean
     fun apiKeyAuthenticationManager(getTenantQuery: GetTenantQuery) = ApiKeyAuthenticationManager(getTenantQuery)

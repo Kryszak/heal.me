@@ -3,3 +3,6 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
+
+healme:
+  visit-duration: PT30M # visit duration = 30 minutes
