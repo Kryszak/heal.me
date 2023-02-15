@@ -33,24 +33,29 @@ open class SqlVisitStore(private val visitRepository: VisitRepository) : VisitSt
     override fun findVisit(visitId: Long, tenantId: TenantId): Either<Throwable, Visit> =
         Either.catch {
             visitRepository.findByIdAndOwner(visitId, tenantId.value)
-                ?: throw DataNotFoundException("Doctor with id={$visitId} not found under owner={$tenantId}")
+                ?: throw DataNotFoundException("Visit with id={$visitId} not found under owner={$tenantId}")
         }.map(VisitEntity::toDomain)
 
     @Transactional
-    override fun findVisits(tenantId: TenantId, pageable: Pageable): Either<Throwable, Page<Visit>> {
-        return Either.catch { visitRepository.findAllByOwner(tenantId.value, pageable) }
+    override fun findVisits(tenantId: TenantId, pageable: Pageable): Either<Throwable, Page<Visit>> =
+        Either.catch { visitRepository.findAllByOwner(tenantId.value, pageable) }
             .map { it.map(VisitEntity::toDomain) }
-    }
+
+    override fun findPatientVisits(
+        patientId: Long,
+        tenantId: TenantId,
+        pageable: Pageable
+    ): Either<Throwable, Page<Visit>> =
+        Either.catch { visitRepository.findAllByPatientIdAndOwner(patientId, tenantId.value, pageable) }
+            .map { it.map(VisitEntity::toDomain) }
 
     @Transactional
-    override fun deleteByPatient(patientId: Long, tenantId: TenantId): Either<Throwable, Unit> {
-        return Either.catch { visitRepository.deleteByPatientIdAndOwner(patientId, tenantId.value) }
-    }
+    override fun deleteByPatient(patientId: Long, tenantId: TenantId): Either<Throwable, Unit> =
+        Either.catch { visitRepository.deleteByPatientIdAndOwner(patientId, tenantId.value) }
 
     @Transactional
-    override fun deleteByDoctor(doctorId: Long, tenantId: TenantId): Either<Throwable, Unit> {
-        return Either.catch { visitRepository.deleteByDoctorIdAndOwner(doctorId, tenantId.value) }
-    }
+    override fun deleteByDoctor(doctorId: Long, tenantId: TenantId): Either<Throwable, Unit> =
+        Either.catch { visitRepository.deleteByDoctorIdAndOwner(doctorId, tenantId.value) }
 
     override fun deleteVisit(visit: Visit): Either<Throwable, Unit> =
         Either.catch { visitRepository.delete(VisitEntity.fromDomain(visit)) }

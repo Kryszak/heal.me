@@ -6,6 +6,7 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import net.kryszak.healme.visit.CreateVisitCommand
 import net.kryszak.healme.visit.DeleteVisitCommand
+import net.kryszak.healme.visit.GetPatientVisitsQuery
 import net.kryszak.healme.visit.GetVisitsQuery
 import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.*
 class VisitController(
     private val createVisitCommand: CreateVisitCommand,
     private val getVisitsQuery: GetVisitsQuery,
+    private val getPatientVisitsQuery: GetPatientVisitsQuery,
     private val deleteVisitCommand: DeleteVisitCommand,
     private val exceptionMapper: VisitExceptionMapper
 ) {
@@ -47,6 +49,17 @@ class VisitController(
         pageable: Pageable
     ): ResponseEntity<*> =
         getVisitsQuery.execute(GetVisitsQuery.Input(pageable))
+            .map { it.map(VisitDto::from) }
+            .fold(exceptionMapper::mapExceptionToResponse) { ResponseEntity.ok(it) }
+
+    @GetMapping("/patients/{patientId}/visits")
+    fun getPatientVisits(
+        @PageableDefault(page = 0, size = 20)
+        @SortDefault(sort = ["id"], direction = Sort.Direction.ASC)
+        pageable: Pageable,
+        @PathVariable patientId: Long,
+    ): ResponseEntity<*> =
+        getPatientVisitsQuery.execute(GetPatientVisitsQuery.Input(patientId, pageable))
             .map { it.map(VisitDto::from) }
             .fold(exceptionMapper::mapExceptionToResponse) { ResponseEntity.ok(it) }
 

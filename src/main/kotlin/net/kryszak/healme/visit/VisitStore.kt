@@ -18,6 +18,8 @@ interface VisitStore {
 
     fun findVisits(tenantId: TenantId, pageable: Pageable): Either<Throwable, Page<Visit>>
 
+    fun findPatientVisits(patientId: Long, tenantId: TenantId, pageable: Pageable): Either<Throwable, Page<Visit>>
+
     fun deleteByPatient(patientId: Long, tenantId: TenantId): Either<Throwable, Unit>
 
     fun deleteByDoctor(doctorId: Long, tenantId: TenantId): Either<Throwable, Unit>

@@ -128,7 +128,7 @@ class SqlVisitStoreTest : ShouldSpec({
         result shouldBeRight PageImpl(listOf(testVisit()))
     }
 
-    should("find visit") {
+    should("find visit by id") {
         //given
         every { visitRepository.findByIdAndOwner(VISIT_ID, VISIT_OWNER.value) } returns testVisitEntity()
 
@@ -137,5 +137,23 @@ class SqlVisitStoreTest : ShouldSpec({
 
         //then
         result shouldBeRight testVisit()
+    }
+
+    should("retrieve patient's visits list") {
+        //given
+        val pageable = Pageable.unpaged()
+        every {
+            visitRepository.findAllByPatientIdAndOwner(
+                PATIENT_ID,
+                VISIT_OWNER.value,
+                pageable
+            )
+        } returns PageImpl(listOf(testVisitEntity()))
+
+        //when
+        val result = visitStore.findPatientVisits(PATIENT_ID, VISIT_OWNER, pageable)
+
+        //then
+        result shouldBeRight PageImpl(listOf(testVisit()))
     }
 })

@@ -27,5 +27,8 @@ interface VisitRepository : PagingAndSortingRepository<VisitEntity, Long> {
     fun deleteByPatientIdAndOwner(patientId: Long, owner: UUID): Long
 
     fun deleteByDoctorIdAndOwner(doctorId: Long, owner: UUID): Long
+
     fun findAllByOwner(owner: UUID, pageable: Pageable): Page<VisitEntity>
+
+    fun findAllByPatientIdAndOwner(patientId: Long, owner: UUID, pageable: Pageable): Page<VisitEntity>
 }
