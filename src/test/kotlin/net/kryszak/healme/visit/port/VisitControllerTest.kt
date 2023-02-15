@@ -179,7 +179,8 @@ class VisitControllerTest : ShouldSpec() {
                 status { isOk() }
                 content { contentType(MediaType.APPLICATION_JSON) }
                 content { jsonPath("\$.content[0].id") { isNotEmpty() } }
-                content { jsonPath("\$.content[0].dateTime") { isNotEmpty() } }
+                content { jsonPath("\$.content[0].date") { isNotEmpty() } }
+                content { jsonPath("\$.content[0].time") { isNotEmpty() } }
                 content { jsonPath("\$.content[0].place") { isNotEmpty() } }
                 content { jsonPath("\$.content[0].doctor") { isNotEmpty() } }
                 content { jsonPath("\$.content[0].patient") { isNotEmpty() } }
@@ -225,7 +226,8 @@ class VisitControllerTest : ShouldSpec() {
                 status { isOk() }
                 content { contentType(MediaType.APPLICATION_JSON) }
                 content { jsonPath("\$.content[0].id") { isNotEmpty() } }
-                content { jsonPath("\$.content[0].dateTime") { isNotEmpty() } }
+                content { jsonPath("\$.content[0].date") { isNotEmpty() } }
+                content { jsonPath("\$.content[0].time") { isNotEmpty() } }
                 content { jsonPath("\$.content[0].place") { isNotEmpty() } }
                 content { jsonPath("\$.content[0].doctor") { isNotEmpty() } }
                 content { jsonPath("\$.content[0].patient") { isNotEmpty() } }
