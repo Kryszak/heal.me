@@ -23,6 +23,10 @@ class VisitEntity {
 
     lateinit var place: String
 
+    // NOTE
+    // THis two relations should me mapped using dedicated view-only mapping classes,
+    // not db models from another domain packages.
+    // This approach was picked to reduce code duplication and speed up development process.
     @OneToOne
     @JoinColumn(name = "doctor_id")
     lateinit var doctor: DoctorEntity
