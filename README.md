@@ -3,6 +3,8 @@
 [![codecov](https://codecov.io/github/Kryszak/heal.me/branch/master/graph/badge.svg?token=YS8VUYI7XM)](https://codecov.io/github/Kryszak/heal.me)
 
 # heal.me
+Example reqruitment task with purpose if "showing off how I code" for Kotlin + Springboot stack
+
 ## Project description
 Check [requirements](./requirements.md)
 
