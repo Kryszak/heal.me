@@ -3,6 +3,9 @@
 [![codecov](https://codecov.io/github/Kryszak/heal.me/branch/master/graph/badge.svg?token=YS8VUYI7XM)](https://codecov.io/github/Kryszak/heal.me)
 
 # heal.me
+## Project description
+Check [requirements](./requirements.md)
+
 ## Development
 For development purposes there is docker compose setup for local PostgreSQL db setup.
 
