@@ -55,8 +55,9 @@ kotlin {
     }
 }
 
-tasks.test {
-    useJUnitPlatform()
+tasks.withType<Test> {
+  useJUnitPlatform() 
+  finalizedBy(tasks.jacocoTestReport)
 }
 
 tasks.withType<Jar>() {
