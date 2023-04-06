@@ -56,7 +56,8 @@ kotlin {
 }
 
 tasks.test {
-  useJUnitPlatform() 
+    useJUnitPlatform() 
+    finalizedBy(tasks.jacocoTestReport)
 }
 
 tasks.withType<Jar>() {
@@ -64,14 +65,18 @@ tasks.withType<Jar>() {
 }
 
 jacoco {
-    toolVersion = "0.8.8"
+    toolVersion = "0.8.9"
 }
 
 tasks.jacocoTestReport {
+    dependsOn(tasks.test)
     reports {
         xml.required.set(true)
         html.required.set(false)
     }
+}
+
+tasks.withType<JacocoReport> {
     afterEvaluate {
         classDirectories.setFrom(files(classDirectories.files.map {
             fileTree(it).apply {
@@ -83,4 +88,3 @@ tasks.jacocoTestReport {
         }))
     }
 }
-
