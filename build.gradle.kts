@@ -55,9 +55,8 @@ kotlin {
     }
 }
 
-tasks.withType<Test> {
+tasks.test {
   useJUnitPlatform() 
-  finalizedBy(tasks.jacocoTestReport)
 }
 
 tasks.withType<Jar>() {
@@ -69,7 +68,6 @@ jacoco {
 }
 
 tasks.jacocoTestReport {
-    dependsOn(tasks.test) 
     reports {
         xml.required.set(true)
         html.required.set(false)
