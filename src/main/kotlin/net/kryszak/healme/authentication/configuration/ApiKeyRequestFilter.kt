@@ -1,6 +1,6 @@
 package net.kryszak.healme.authentication.configuration
 
-import javax.servlet.http.HttpServletRequest
+import jakarta.servlet.http.HttpServletRequest
 import org.springframework.security.web.authentication.preauth.AbstractPreAuthenticatedProcessingFilter
 
 class ApiKeyRequestFilter : AbstractPreAuthenticatedProcessingFilter() {

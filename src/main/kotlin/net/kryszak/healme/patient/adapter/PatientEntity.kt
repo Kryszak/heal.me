@@ -1,12 +1,11 @@
 package net.kryszak.healme.patient.adapter
 
-import java.util.UUID
-import javax.persistence.*
+import jakarta.persistence.*
 import net.kryszak.healme.authentication.TenantId
 import net.kryszak.healme.patient.CreatePatientParams
 import net.kryszak.healme.patient.Patient
 import org.hibernate.Hibernate
-import org.hibernate.annotations.Type
+import java.util.*
 
 @Entity
 @Table(name = "patient")
@@ -22,7 +21,6 @@ class PatientEntity {
 
     lateinit var address: String
 
-    @Type(type = "uuid-char")
     lateinit var owner: UUID
 
     fun toDomain() = Patient(id, name, surname, address, TenantId(owner))

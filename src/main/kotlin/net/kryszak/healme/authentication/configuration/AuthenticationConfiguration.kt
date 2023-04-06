@@ -48,7 +48,7 @@ class AuthenticationConfiguration {
             .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             .and()
             .addFilter(apiKeyRequestFilter)
-            .authorizeRequests()
+            .authorizeHttpRequests()
             .anyRequest()
             .authenticated()
 
