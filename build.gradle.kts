@@ -1,15 +1,15 @@
 plugins {
+    val kotlinVersion = "1.8.20"
     id("org.springframework.boot") version "3.0.5"
     id("io.spring.dependency-management") version "1.1.0"
-    kotlin("jvm") version "1.8.20"
-    kotlin("plugin.spring") version "1.8.20"
-    kotlin("plugin.jpa") version "1.8.20"
+    kotlin("jvm") version kotlinVersion
+    kotlin("plugin.spring") version kotlinVersion
+    kotlin("plugin.jpa") version kotlinVersion
     jacoco
 }
 
 group = "net.kryszak"
 version = "0.0.1-SNAPSHOT"
-
 
 val kotestVersion = "5.5.5"
 val kotestArrowExtensionVersion = "1.3.1"
