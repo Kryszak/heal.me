@@ -11,7 +11,7 @@ plugins {
 
 group = "net.kryszak"
 version = "0.0.1-SNAPSHOT"
-sourceCompatibility = "11"
+sourceCompatibility = "17"
 
 ext {
     arrowVersion = "1.1.2"
@@ -57,7 +57,7 @@ dependencies {
 tasks.withType(KotlinCompile) {
     kotlinOptions {
         freeCompilerArgs = ["-Xjsr305=strict"]
-        jvmTarget = "11"
+        jvmTarget = "17"
     }
 }
 
