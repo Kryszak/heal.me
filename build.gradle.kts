@@ -56,7 +56,7 @@ kotlin {
 }
 
 tasks.test {
-    useJUnitPlatform()
+  useJUnitPlatform() 
 }
 
 tasks.withType<Jar>() {
