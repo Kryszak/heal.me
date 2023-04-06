@@ -11,8 +11,8 @@ import java.util.*
 @Table(name = "doctor")
 class DoctorEntity {
 
-    @field:Id
-    @field:GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     var id: Long = 0
 
     lateinit var name: String

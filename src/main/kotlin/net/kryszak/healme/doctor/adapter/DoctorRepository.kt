@@ -10,6 +10,8 @@ interface DoctorRepository : PagingAndSortingRepository<DoctorEntity, Long> {
     fun findAllByOwner(owner: UUID, pageable: Pageable): Page<DoctorEntity>
 
     fun findByIdAndOwner(id: Long, owner: UUID): DoctorEntity?
+
     fun save(it: DoctorEntity): DoctorEntity
+    
     fun delete(fromDomain: DoctorEntity)
 }
