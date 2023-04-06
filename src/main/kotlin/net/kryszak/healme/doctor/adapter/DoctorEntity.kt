@@ -1,19 +1,18 @@
 package net.kryszak.healme.doctor.adapter
 
-import java.util.UUID
-import javax.persistence.*
+import jakarta.persistence.*
 import net.kryszak.healme.authentication.TenantId
 import net.kryszak.healme.doctor.CreateDoctorParams
 import net.kryszak.healme.doctor.Doctor
 import org.hibernate.Hibernate
-import org.hibernate.annotations.Type
+import java.util.*
 
 @Entity
 @Table(name = "doctor")
 class DoctorEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @field:Id
+    @field:GeneratedValue(strategy = GenerationType.SEQUENCE)
     var id: Long = 0
 
     lateinit var name: String
@@ -22,7 +21,6 @@ class DoctorEntity {
 
     lateinit var specialization: String
 
-    @Type(type = "uuid-char")
     lateinit var owner: UUID
 
     fun toDomain() = Doctor(id, name, surname, specialization, TenantId(owner))

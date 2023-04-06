@@ -1,7 +1,7 @@
 package net.kryszak.healme.visit.adapter
 
 import arrow.core.Either
-import javax.transaction.Transactional
+import jakarta.transaction.Transactional
 import net.kryszak.healme.authentication.TenantId
 import net.kryszak.healme.common.exception.DataNotFoundException
 import net.kryszak.healme.doctor.adapter.DoctorEntity

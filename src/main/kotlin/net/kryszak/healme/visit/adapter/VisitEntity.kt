@@ -1,15 +1,14 @@
 package net.kryszak.healme.visit.adapter
 
-import java.time.LocalDateTime
-import java.util.UUID
-import javax.persistence.*
+import jakarta.persistence.*
 import net.kryszak.healme.authentication.TenantId
 import net.kryszak.healme.doctor.adapter.DoctorEntity
 import net.kryszak.healme.patient.adapter.PatientEntity
 import net.kryszak.healme.visit.CreateVisitParams
 import net.kryszak.healme.visit.Visit
 import org.hibernate.Hibernate
-import org.hibernate.annotations.Type
+import java.time.LocalDateTime
+import java.util.*
 
 @Entity
 @Table(name = "visit")
@@ -24,7 +23,7 @@ class VisitEntity {
     lateinit var place: String
 
     // NOTE
-    // THis two relations should me mapped using dedicated view-only mapping classes,
+    // THis two relations should be mapped using dedicated view-only mapping classes,
     // not db models from another domain packages.
     // This approach was picked to reduce code duplication and speed up development process.
     @OneToOne
@@ -35,7 +34,6 @@ class VisitEntity {
     @JoinColumn(name = "patient_id")
     lateinit var patient: PatientEntity
 
-    @Type(type = "uuid-char")
     lateinit var owner: UUID
 
     fun toDomain() = Visit(id, dateTime, place, doctor.toDomain(), patient.toDomain(), TenantId(owner))

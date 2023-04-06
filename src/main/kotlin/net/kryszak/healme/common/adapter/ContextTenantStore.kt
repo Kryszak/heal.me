@@ -1,7 +1,7 @@
 package net.kryszak.healme.common.adapter
 
 import arrow.core.Either
-import javax.servlet.http.HttpServletRequest
+import jakarta.servlet.http.HttpServletRequest
 import net.kryszak.healme.authentication.TenantId
 import net.kryszak.healme.authentication.port.AuthenticationFacade
 import net.kryszak.healme.common.TenantStore

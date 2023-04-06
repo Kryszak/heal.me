@@ -1,9 +1,9 @@
 plugins {
-    id("org.springframework.boot") version "2.7.8"
+    id("org.springframework.boot") version "3.0.5"
     id("io.spring.dependency-management") version "1.1.0"
-    id("org.jetbrains.kotlin.jvm") version "1.7.22"
-    id("org.jetbrains.kotlin.plugin.spring") version "1.7.22"
-    id("org.jetbrains.kotlin.plugin.jpa") version "1.7.22"
+    kotlin("jvm") version "1.7.22"
+    kotlin("plugin.spring") version "1.7.22"
+    kotlin("plugin.jpa") version "1.7.22"
     jacoco
 }
 
@@ -11,11 +11,11 @@ group = "net.kryszak"
 version = "0.0.1-SNAPSHOT"
 
 
-val kotestVersion = "5.3.2"
-val kotestArrowExtensionVersion = "1.2.5"
-val kotestSpringExtensionVersion = "1.1.1"
-val mockkVersion = "1.12.4"
-val h2Version = "1.3.148"
+val kotestVersion = "5.5.5"
+val kotestArrowExtensionVersion = "1.3.1"
+val kotestSpringExtensionVersion = "1.1.2"
+val mockkVersion = "1.13.4"
+val h2Version = "2.1.214"
 val loggingVersion = "3.0.5"
 val arrowVersion = "1.1.5"
 val jacksonKotlinVersion = "2.14.2"
@@ -57,6 +57,10 @@ kotlin {
 
 tasks.test {
     useJUnitPlatform()
+}
+
+tasks.withType<Jar>() {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
 
 jacoco {

@@ -1,11 +1,11 @@
 package net.kryszak.healme.authentication.adapter
 
-import java.util.UUID
-import javax.persistence.Entity
-import javax.persistence.Id
-import javax.persistence.Table
+import jakarta.persistence.Entity
+import jakarta.persistence.Id
+import jakarta.persistence.Table
 import net.kryszak.healme.authentication.TenantId
 import org.hibernate.Hibernate
+import java.util.*
 
 @Entity
 @Table(name = "tenant")
