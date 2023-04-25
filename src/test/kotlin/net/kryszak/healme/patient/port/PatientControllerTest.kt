@@ -131,7 +131,7 @@ class PatientControllerTest : ShouldSpec() {
                 )
             )
                 .map(Patient::id)
-                .getOrNull() ?: throw Exception()
+                .getOrNull()!!
             val request = UpdatePatientDto(patientId, updatedPatientName, updatedPatientSurname, updatedPatientAddress)
 
             //when & then

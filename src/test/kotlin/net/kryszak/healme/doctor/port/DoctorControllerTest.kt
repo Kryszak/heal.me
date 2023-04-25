@@ -173,7 +173,7 @@ class DoctorControllerTest : ShouldSpec() {
                 )
             )
                 .map(Doctor::id)
-                .getOrNull() ?: throw Exception()
+                .getOrNull()!!
             val request = UpdateDoctorDto(2L, updatedDoctorName, updatedDoctorSurname, updatedDoctorSpecialization)
 
             //when & then
