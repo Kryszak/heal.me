@@ -3,8 +3,7 @@ package net.kryszak.healme.patient.port
 import com.fasterxml.jackson.databind.ObjectMapper
 import io.kotest.core.spec.style.ShouldSpec
 import io.kotest.extensions.spring.SpringExtension
-import java.util.UUID
-import net.kryszak.healme.authentication.TenantId
+import net.kryszak.healme.authentication.*
 import net.kryszak.healme.patient.*
 import org.junit.jupiter.api.Assertions.*
 import org.springframework.beans.factory.annotation.Autowired
@@ -14,6 +13,7 @@ import org.springframework.http.MediaType
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.jdbc.Sql
 import org.springframework.test.web.servlet.*
+import java.util.*
 
 
 @SpringBootTest
@@ -34,13 +34,19 @@ class PatientControllerTest : ShouldSpec() {
     lateinit var patientStore: PatientStore
 
     init {
+        val patientsUrl = "/patients"
+
+        val updatedPatientName = "New name"
+        val updatedPatientSurname = "New Surname"
+        val updatedPatientAddress = "another address"
+
         should("create new patient") {
             //given
             val request = CreatePatientDto("Jan", "Random", "random address")
 
             //when & then
-            mockMvc.post("/patients") {
-                header("x-api-key", "test")
+            mockMvc.post(patientsUrl) {
+                header(API_KEY_HEADER, VALID_API_KEY)
                 contentType = MediaType.APPLICATION_JSON
                 content = objectMapper.writeValueAsString(request)
             }.andExpect {
@@ -50,8 +56,8 @@ class PatientControllerTest : ShouldSpec() {
 
         should("return 403 response if tenant is not found") {
             //when & then
-            mockMvc.get("/patients") {
-                header("x-api-key", "i-do-not-exist")
+            mockMvc.get(patientsUrl) {
+                header(API_KEY_HEADER, INVALID_API_KEY)
             }.andExpect {
                 status { isForbidden() }
             }
@@ -64,13 +70,13 @@ class PatientControllerTest : ShouldSpec() {
                     PATIENT_NAME,
                     PATIENT_SURNAME,
                     PATIENT_ADDRESS,
-                    TenantId(UUID.fromString("1bfcfd37-eafa-414a-94be-b377c7399a39"))
+                    TENANT_ID
                 )
             )
 
             //when & then
-            mockMvc.get("/patients") {
-                header("x-api-key", "test")
+            mockMvc.get(patientsUrl) {
+                header(API_KEY_HEADER, VALID_API_KEY)
             }.andExpect {
                 status { isOk() }
                 content { contentType(MediaType.APPLICATION_JSON) }
@@ -87,15 +93,15 @@ class PatientControllerTest : ShouldSpec() {
                     PATIENT_NAME,
                     PATIENT_SURNAME,
                     PATIENT_ADDRESS,
-                    TenantId(UUID.fromString("1bfcfd37-eafa-414a-94be-b377c7399a39"))
+                    TENANT_ID
                 )
             )
                 .map(Patient::id)
                 .getOrNull()
 
             //when & then
-            mockMvc.get("/patients/$patientId") {
-                header("x-api-key", "test")
+            mockMvc.get("$patientsUrl/$patientId") {
+                header(API_KEY_HEADER, VALID_API_KEY)
             }.andExpect {
                 status { isOk() }
                 content { contentType(MediaType.APPLICATION_JSON) }
@@ -107,8 +113,8 @@ class PatientControllerTest : ShouldSpec() {
 
         should("return 404 status if patient was not found") {
             //when & then
-            mockMvc.get("/patients/10000") {
-                header("x-api-key", "test")
+            mockMvc.get("$patientsUrl/10000") {
+                header(API_KEY_HEADER, VALID_API_KEY)
             }.andExpect {
                 status { isNotFound() }
             }
@@ -121,35 +127,35 @@ class PatientControllerTest : ShouldSpec() {
                     PATIENT_NAME,
                     PATIENT_SURNAME,
                     PATIENT_ADDRESS,
-                    TenantId(UUID.fromString("1bfcfd37-eafa-414a-94be-b377c7399a39"))
+                    TENANT_ID
                 )
             )
                 .map(Patient::id)
                 .getOrNull() ?: throw Exception()
-            val request = UpdatePatientDto(patientId, "New name", "New Surname", "another address")
+            val request = UpdatePatientDto(patientId, updatedPatientName, updatedPatientSurname, updatedPatientAddress)
 
             //when & then
-            mockMvc.put("/patients/$patientId") {
-                header("x-api-key", "test")
+            mockMvc.put("$patientsUrl/$patientId") {
+                header(API_KEY_HEADER, VALID_API_KEY)
                 contentType = MediaType.APPLICATION_JSON
                 content = objectMapper.writeValueAsString(request)
             }.andExpect {
                 status { isOk() }
                 content { contentType(MediaType.APPLICATION_JSON) }
-                content { jsonPath("\$.name") { value("New name") } }
-                content { jsonPath("\$.surname") { value("New Surname") } }
-                content { jsonPath("\$.address") { value("another address") } }
+                content { jsonPath("\$.name") { value(updatedPatientName) } }
+                content { jsonPath("\$.surname") { value(updatedPatientSurname) } }
+                content { jsonPath("\$.address") { value(updatedPatientAddress) } }
             }
         }
 
         should("return 404 if attempted to update non existing patient") {
             //given
             val patientId = 10000L
-            val request = UpdatePatientDto(patientId, "New name", "New Surname", "another address")
+            val request = UpdatePatientDto(patientId, updatedPatientName, updatedPatientSurname, updatedPatientAddress)
 
             //when & then
-            mockMvc.put("/patients/$patientId") {
-                header("x-api-key", "test")
+            mockMvc.put("$patientsUrl/$patientId") {
+                header(API_KEY_HEADER, VALID_API_KEY)
                 contentType = MediaType.APPLICATION_JSON
                 content = objectMapper.writeValueAsString(request)
             }.andExpect {
@@ -164,16 +170,16 @@ class PatientControllerTest : ShouldSpec() {
                     PATIENT_NAME,
                     PATIENT_SURNAME,
                     PATIENT_ADDRESS,
-                    TenantId(UUID.fromString("1bfcfd37-eafa-414a-94be-b377c7399a39"))
+                    TENANT_ID
                 )
             )
                 .map(Patient::id)
                 .getOrNull() ?: throw Exception()
-            val request = UpdatePatientDto(2L, "New name", "New Surname", "another address")
+            val request = UpdatePatientDto(2L, updatedPatientName, updatedPatientSurname, updatedPatientAddress)
 
             //when & then
-            mockMvc.put("/patients/$patientId") {
-                header("x-api-key", "test")
+            mockMvc.put("$patientsUrl/$patientId") {
+                header(API_KEY_HEADER, VALID_API_KEY)
                 contentType = MediaType.APPLICATION_JSON
                 content = objectMapper.writeValueAsString(request)
             }.andExpect {
@@ -188,15 +194,15 @@ class PatientControllerTest : ShouldSpec() {
                     PATIENT_NAME,
                     PATIENT_SURNAME,
                     PATIENT_ADDRESS,
-                    TenantId(UUID.fromString("1bfcfd37-eafa-414a-94be-b377c7399a39"))
+                    TENANT_ID
                 )
             )
                 .map(Patient::id)
                 .getOrNull()
 
             //when & then
-            mockMvc.delete("/patients/$patientId") {
-                header("x-api-key", "test")
+            mockMvc.delete("$patientsUrl/$patientId") {
+                header(API_KEY_HEADER, VALID_API_KEY)
             }.andExpect {
                 status { isNoContent() }
             }
@@ -204,8 +210,8 @@ class PatientControllerTest : ShouldSpec() {
 
         should("return 404 if attempted to delete not existing patient") {
             //when & then
-            mockMvc.delete("/patients/10000") {
-                header("x-api-key", "test")
+            mockMvc.delete("$patientsUrl/10000") {
+                header(API_KEY_HEADER, VALID_API_KEY)
             }.andExpect {
                 status { isNotFound() }
             }

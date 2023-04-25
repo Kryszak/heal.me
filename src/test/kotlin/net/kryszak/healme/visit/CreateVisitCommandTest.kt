@@ -6,14 +6,14 @@ import io.kotest.assertions.arrow.core.shouldBeRight
 import io.kotest.core.spec.style.ShouldSpec
 import io.mockk.every
 import io.mockk.mockk
-import java.time.Duration
-import java.time.LocalDateTime
 import net.kryszak.healme.common.TenantStore
 import net.kryszak.healme.common.exception.DataNotFoundException
 import net.kryszak.healme.doctor.DOCTOR_ID
 import net.kryszak.healme.doctor.testDoctor
 import net.kryszak.healme.patient.PATIENT_ID
 import net.kryszak.healme.patient.testPatient
+import java.time.Duration
+import java.time.LocalDateTime
 
 class CreateVisitCommandTest : ShouldSpec({
     val doctorStore = mockk<DoctorStore>()
@@ -23,6 +23,8 @@ class CreateVisitCommandTest : ShouldSpec({
     val visitDuration = Duration.ofMinutes(30)
     val command = CreateVisitCommand(doctorStore, patientStore, visitStore, tenantStore, visitDuration)
 
+    val place = "place"
+
     should("create new visit") {
         //given
         val doctorId = DOCTOR_ID
@@ -30,7 +32,6 @@ class CreateVisitCommandTest : ShouldSpec({
         val doctor = testDoctor()
         val patient = testPatient()
         val dateTime = LocalDateTime.now()
-        val place = "place"
         val input = CreateVisitCommand.Input(doctorId, patientId, dateTime, place)
         every { tenantStore.getCurrentTenant() } returns Either.Right(VISIT_OWNER)
         every { doctorStore.getDoctor(doctorId) } returns Either.Right(doctor)
@@ -73,7 +74,6 @@ class CreateVisitCommandTest : ShouldSpec({
         val doctor = testDoctor()
         val patient = testPatient()
         val dateTime = LocalDateTime.now()
-        val place = "place"
         val input = CreateVisitCommand.Input(doctorId, patientId, dateTime, place)
         every { tenantStore.getCurrentTenant() } returns Either.Right(VISIT_OWNER)
         every { doctorStore.getDoctor(doctorId) } returns Either.Right(doctor)
@@ -101,7 +101,6 @@ class CreateVisitCommandTest : ShouldSpec({
         val doctorId = DOCTOR_ID
         val patientId = PATIENT_ID
         val dateTime = LocalDateTime.now()
-        val place = "place"
         val input = CreateVisitCommand.Input(doctorId, patientId, dateTime, place)
         val exception = DataNotFoundException()
         every { tenantStore.getCurrentTenant() } returns Either.Left(exception)
@@ -120,7 +119,6 @@ class CreateVisitCommandTest : ShouldSpec({
         val doctorId = DOCTOR_ID
         val patientId = PATIENT_ID
         val dateTime = LocalDateTime.now()
-        val place = "place"
         val input = CreateVisitCommand.Input(doctorId, patientId, dateTime, place)
         val exception = DataNotFoundException()
         every { tenantStore.getCurrentTenant() } returns Either.Right(VISIT_OWNER)
@@ -139,7 +137,6 @@ class CreateVisitCommandTest : ShouldSpec({
         val doctorId = DOCTOR_ID
         val patientId = PATIENT_ID
         val dateTime = LocalDateTime.now()
-        val place = "place"
         val input = CreateVisitCommand.Input(doctorId, patientId, dateTime, place)
         val exception = DataNotFoundException()
         every { tenantStore.getCurrentTenant() } returns Either.Right(VISIT_OWNER)
@@ -160,7 +157,6 @@ class CreateVisitCommandTest : ShouldSpec({
         val doctor = testDoctor()
         val patient = testPatient()
         val dateTime = LocalDateTime.now()
-        val place = "place"
         val input = CreateVisitCommand.Input(doctorId, patientId, dateTime, place)
         val exception = Exception()
 

@@ -11,40 +11,37 @@ import net.kryszak.healme.common.exception.DataMismatchException
 import net.kryszak.healme.common.exception.DataNotFoundException
 import net.kryszak.healme.patient.UpdatePatientCommand.Input
 
+
 class UpdatePatientCommandTest : ShouldSpec({
     val patientStore = mockk<PatientStore>()
     val tenantStore = mockk<TenantStore>()
     val command = UpdatePatientCommand(patientStore, tenantStore)
 
+    val updatedName = "Updated name"
+    val updatedSurname = "Updated surname"
+    val updatedAddress = "Updated address"
+
     should("update patient") {
         //given
-        val name = "Updated name"
-        val surname = "Updated surname"
-        val address = "Updated address"
         val updatedPatient = testPatient().copy(
-            name = name,
-            surname = surname,
-            address = address
+            name = updatedName,
+            surname = updatedSurname,
+            address = updatedAddress
         )
         every { tenantStore.getCurrentTenant() } returns Either.Right(PATIENT_OWNER)
         every { patientStore.findPatient(PATIENT_OWNER, PATIENT_ID) } returns Either.Right(testPatient())
         every { patientStore.updatePatient(updatedPatient) } returns Either.Right(updatedPatient)
 
         //when
-        val result = command.execute(Input(PATIENT_ID, PATIENT_ID, name, surname, address))
+        val result = command.execute(Input(PATIENT_ID, PATIENT_ID, updatedName, updatedSurname, updatedAddress))
 
         //then
         result shouldBeRight updatedPatient
     }
 
     should("not update patient if resource id does not match patient id") {
-        //given
-        val name = "Updated name"
-        val surname = "Updated surname"
-        val address = "Updated address"
-
         //when
-        val result = command.execute(Input(2L, PATIENT_ID, name, surname, address))
+        val result = command.execute(Input(2L, PATIENT_ID, updatedName, updatedSurname, updatedAddress))
 
         //then
         result shouldBeLeft DataMismatchException()
@@ -52,15 +49,12 @@ class UpdatePatientCommandTest : ShouldSpec({
 
     should("not update patient if patient is not found") {
         //given
-        val name = "Updated name"
-        val surname = "Updated surname"
-        val address = "Updated address"
         val exception = DataNotFoundException()
         every { tenantStore.getCurrentTenant() } returns Either.Right(PATIENT_OWNER)
         every { patientStore.findPatient(PATIENT_OWNER, PATIENT_ID) } returns Either.Left(exception)
 
         //when
-        val result = command.execute(Input(PATIENT_ID, PATIENT_ID, name, surname, address))
+        val result = command.execute(Input(PATIENT_ID, PATIENT_ID, updatedName, updatedSurname, updatedAddress))
 
         //then
         result shouldBeLeft exception

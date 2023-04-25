@@ -11,39 +11,35 @@ import net.kryszak.healme.common.exception.DataMismatchException
 import net.kryszak.healme.common.exception.DataNotFoundException
 
 class UpdateDoctorCommandTest : ShouldSpec({
+    val updatedName = "Updated name"
+    val updatedSurname = "Updated surname"
+    val updatedSpecialization = "Updated specialization"
+
     val doctorStore = mockk<DoctorStore>()
     val tenantStore = mockk<TenantStore>()
     val command = UpdateDoctorCommand(doctorStore, tenantStore)
 
     should("update doctor") {
         //given
-        val name = "Updated name"
-        val surname = "Updated surname"
-        val specialization = "Updated specialization"
         val updatedDoctor = testDoctor().copy(
-            name = name,
-            surname = surname,
-            specialization = specialization
+                name = updatedName,
+                surname = updatedSurname,
+                specialization = updatedSpecialization
         )
         every { tenantStore.getCurrentTenant() } returns Either.Right(DOCTOR_OWNER)
         every { doctorStore.findDoctor(DOCTOR_OWNER, DOCTOR_ID) } returns Either.Right(testDoctor())
         every { doctorStore.updateDoctor(updatedDoctor) } returns Either.Right(updatedDoctor)
 
         //when
-        val result = command.execute(UpdateDoctorCommand.Input(DOCTOR_ID, DOCTOR_ID, name, surname, specialization))
+        val result = command.execute(UpdateDoctorCommand.Input(DOCTOR_ID, DOCTOR_ID, updatedName, updatedSurname, updatedSpecialization))
 
         //then
         result shouldBeRight updatedDoctor
     }
 
     should("not update doctor if resource id does not match doctor id") {
-        //given
-        val name = "Updated name"
-        val surname = "Updated surname"
-        val specialization = "Updated specialization"
-
         //when
-        val result = command.execute(UpdateDoctorCommand.Input(2L, DOCTOR_ID, name, surname, specialization))
+        val result = command.execute(UpdateDoctorCommand.Input(2L, DOCTOR_ID, updatedName, updatedSurname, updatedSpecialization))
 
         //then
         result shouldBeLeft DataMismatchException()
@@ -51,15 +47,12 @@ class UpdateDoctorCommandTest : ShouldSpec({
 
     should("not update doctor if doctor is not found") {
         //given
-        val name = "Updated name"
-        val surname = "Updated surname"
-        val specialization = "Updated specialization"
         val exception = DataNotFoundException()
         every { tenantStore.getCurrentTenant() } returns Either.Right(DOCTOR_OWNER)
         every { doctorStore.findDoctor(DOCTOR_OWNER, DOCTOR_ID) } returns Either.Left(exception)
 
         //when
-        val result = command.execute(UpdateDoctorCommand.Input(DOCTOR_ID, DOCTOR_ID, name, surname, specialization))
+        val result = command.execute(UpdateDoctorCommand.Input(DOCTOR_ID, DOCTOR_ID, updatedName, updatedSurname, updatedSpecialization))
 
         //then
         result shouldBeLeft exception

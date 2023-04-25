@@ -3,14 +3,11 @@ package net.kryszak.healme.visit.port
 import com.fasterxml.jackson.databind.ObjectMapper
 import io.kotest.core.spec.style.ShouldSpec
 import io.kotest.extensions.spring.SpringExtension
-import java.time.LocalDateTime
-import java.time.LocalTime
-import java.time.format.DateTimeFormatter
-import java.util.UUID
-import net.kryszak.healme.authentication.TenantId
+import net.kryszak.healme.authentication.*
 import net.kryszak.healme.doctor.*
 import net.kryszak.healme.patient.*
 import net.kryszak.healme.visit.CreateVisitParams
+import net.kryszak.healme.visit.VISIT_PLACE
 import net.kryszak.healme.visit.Visit
 import net.kryszak.healme.visit.VisitStore
 import org.springframework.beans.factory.annotation.Autowired
@@ -20,6 +17,9 @@ import org.springframework.http.MediaType
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.jdbc.Sql
 import org.springframework.test.web.servlet.*
+import java.time.LocalDateTime
+import java.time.LocalTime
+import java.time.format.DateTimeFormatter
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -45,6 +45,8 @@ class VisitControllerTest : ShouldSpec() {
     lateinit var doctorStore: DoctorStore
 
     init {
+        val visitsUrl = "/visits"
+
         should("create new visit") {
             //given
             val patientId = patientStore.savePatient(
@@ -52,7 +54,7 @@ class VisitControllerTest : ShouldSpec() {
                     PATIENT_NAME,
                     PATIENT_SURNAME,
                     PATIENT_ADDRESS,
-                    TenantId(UUID.fromString("1bfcfd37-eafa-414a-94be-b377c7399a39"))
+                    TENANT_ID
                 )
             )
                 .map(Patient::id)
@@ -63,7 +65,7 @@ class VisitControllerTest : ShouldSpec() {
                     DOCTOR_NAME,
                     DOCTOR_SURNAME,
                     DOCTOR_SPECIALIZATION,
-                    TenantId(UUID.fromString("1bfcfd37-eafa-414a-94be-b377c7399a39"))
+                    TENANT_ID
                 )
             )
                 .map(Doctor::id)
@@ -72,8 +74,8 @@ class VisitControllerTest : ShouldSpec() {
             val request = CreateVisitDto("2023-02-01", "15:00", "Medical place", doctorId, patientId)
 
             //when & then
-            mockMvc.post("/visits") {
-                header("x-api-key", "test")
+            mockMvc.post(visitsUrl) {
+                header(API_KEY_HEADER, VALID_API_KEY)
                 contentType = MediaType.APPLICATION_JSON
                 content = objectMapper.writeValueAsString(request)
             }.andExpect {
@@ -83,8 +85,8 @@ class VisitControllerTest : ShouldSpec() {
 
         should("return 403 response if tenant is not found") {
             //when & then
-            mockMvc.get("/visits") {
-                header("x-api-key", "i-do-not-exist")
+            mockMvc.get(visitsUrl) {
+                header(API_KEY_HEADER, INVALID_API_KEY)
             }.andExpect {
                 status { isForbidden() }
             }
@@ -97,7 +99,7 @@ class VisitControllerTest : ShouldSpec() {
                     PATIENT_NAME,
                     PATIENT_SURNAME,
                     PATIENT_ADDRESS,
-                    TenantId(UUID.fromString("1bfcfd37-eafa-414a-94be-b377c7399a39"))
+                    TENANT_ID
                 )
             ).getOrNull()!!
 
@@ -106,25 +108,25 @@ class VisitControllerTest : ShouldSpec() {
                     DOCTOR_NAME,
                     DOCTOR_SURNAME,
                     DOCTOR_SPECIALIZATION,
-                    TenantId(UUID.fromString("1bfcfd37-eafa-414a-94be-b377c7399a39"))
+                    TENANT_ID
                 )
             ).getOrNull()!!
 
             val visitId = visitStore.saveVisit(
                 CreateVisitParams(
                     LocalDateTime.now(),
-                    "place",
+                    VISIT_PLACE,
                     doctor,
                     patient,
-                    TenantId(UUID.fromString("1bfcfd37-eafa-414a-94be-b377c7399a39"))
+                    TENANT_ID
                 )
             )
                 .map(Visit::id)
                 .getOrNull()
 
             //when & then
-            mockMvc.delete("/visits/$visitId") {
-                header("x-api-key", "test")
+            mockMvc.delete("$visitsUrl/$visitId") {
+                header(API_KEY_HEADER, VALID_API_KEY)
             }.andExpect {
                 status { isNoContent() }
             }
@@ -132,8 +134,8 @@ class VisitControllerTest : ShouldSpec() {
 
         should("return 404 if attempted to delete not existing visit") {
             //when & then
-            mockMvc.delete("/visits/10000") {
-                header("x-api-key", "test")
+            mockMvc.delete("$visitsUrl/10000") {
+                header(API_KEY_HEADER, VALID_API_KEY)
             }.andExpect {
                 status { isNotFound() }
             }
@@ -146,7 +148,7 @@ class VisitControllerTest : ShouldSpec() {
                     PATIENT_NAME,
                     PATIENT_SURNAME,
                     PATIENT_ADDRESS,
-                    TenantId(UUID.fromString("1bfcfd37-eafa-414a-94be-b377c7399a39"))
+                    TENANT_ID
                 )
             ).getOrNull()!!
 
@@ -155,25 +157,25 @@ class VisitControllerTest : ShouldSpec() {
                     DOCTOR_NAME,
                     DOCTOR_SURNAME,
                     DOCTOR_SPECIALIZATION,
-                    TenantId(UUID.fromString("1bfcfd37-eafa-414a-94be-b377c7399a39"))
+                    TENANT_ID
                 )
             ).getOrNull()!!
 
             visitStore.saveVisit(
                 CreateVisitParams(
                     LocalDateTime.now(),
-                    "place",
+                    VISIT_PLACE,
                     doctor,
                     patient,
-                    TenantId(UUID.fromString("1bfcfd37-eafa-414a-94be-b377c7399a39"))
+                    TENANT_ID
                 )
             )
                 .map(Visit::id)
                 .getOrNull()
 
             //when & then
-            mockMvc.get("/visits") {
-                header("x-api-key", "test")
+            mockMvc.get(visitsUrl) {
+                header(API_KEY_HEADER, VALID_API_KEY)
             }.andExpect {
                 status { isOk() }
                 content { contentType(MediaType.APPLICATION_JSON) }
@@ -193,7 +195,7 @@ class VisitControllerTest : ShouldSpec() {
                     PATIENT_NAME,
                     PATIENT_SURNAME,
                     PATIENT_ADDRESS,
-                    TenantId(UUID.fromString("1bfcfd37-eafa-414a-94be-b377c7399a39"))
+                    TENANT_ID
                 )
             ).getOrNull()!!
 
@@ -202,17 +204,17 @@ class VisitControllerTest : ShouldSpec() {
                     DOCTOR_NAME,
                     DOCTOR_SURNAME,
                     DOCTOR_SPECIALIZATION,
-                    TenantId(UUID.fromString("1bfcfd37-eafa-414a-94be-b377c7399a39"))
+                    TENANT_ID
                 )
             ).getOrNull()!!
 
             visitStore.saveVisit(
                 CreateVisitParams(
                     LocalDateTime.now(),
-                    "place",
+                    VISIT_PLACE,
                     doctor,
                     patient,
-                    TenantId(UUID.fromString("1bfcfd37-eafa-414a-94be-b377c7399a39"))
+                    TENANT_ID
                 )
             )
                 .map(Visit::id)
@@ -220,7 +222,7 @@ class VisitControllerTest : ShouldSpec() {
 
             //when & then
             mockMvc.get("/patients/${patient.id}/visits") {
-                header("x-api-key", "test")
+                header(API_KEY_HEADER, VALID_API_KEY)
             }.andExpect {
                 status { isOk() }
                 content { contentType(MediaType.APPLICATION_JSON) }
@@ -241,7 +243,7 @@ class VisitControllerTest : ShouldSpec() {
                     PATIENT_NAME,
                     PATIENT_SURNAME,
                     PATIENT_ADDRESS,
-                    TenantId(UUID.fromString("1bfcfd37-eafa-414a-94be-b377c7399a39"))
+                    TENANT_ID
                 )
             ).getOrNull()!!
 
@@ -250,25 +252,25 @@ class VisitControllerTest : ShouldSpec() {
                     DOCTOR_NAME,
                     DOCTOR_SURNAME,
                     DOCTOR_SPECIALIZATION,
-                    TenantId(UUID.fromString("1bfcfd37-eafa-414a-94be-b377c7399a39"))
+                    TENANT_ID
                 )
             ).getOrNull()!!
 
             val visitId = visitStore.saveVisit(
                 CreateVisitParams(
                     LocalDateTime.now(),
-                    "place",
+                    VISIT_PLACE,
                     doctor,
                     patient,
-                    TenantId(UUID.fromString("1bfcfd37-eafa-414a-94be-b377c7399a39"))
+                    TENANT_ID
                 )
             )
                 .map(Visit::id)
                 .getOrNull()
 
             //when & then
-            mockMvc.patch("/visits/$visitId") {
-                header("x-api-key", "test")
+            mockMvc.patch("$visitsUrl/$visitId") {
+                header(API_KEY_HEADER, VALID_API_KEY)
                 contentType = MediaType.APPLICATION_JSON
                 content = objectMapper.writeValueAsString(request)
             }.andExpect {
