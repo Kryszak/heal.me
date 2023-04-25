@@ -33,9 +33,11 @@ class PatientControllerTest : ShouldSpec() {
     @Autowired
     lateinit var patientStore: PatientStore
 
-    init {
-        val patientsUrl = "/patients"
+    val patientsUrl = "/patients"
 
+    fun formatPatientUrl(patientId: Long?) = "$patientsUrl/$patientId"
+
+    init {
         val updatedPatientName = "New name"
         val updatedPatientSurname = "New Surname"
         val updatedPatientAddress = "another address"
@@ -100,7 +102,7 @@ class PatientControllerTest : ShouldSpec() {
                 .getOrNull()
 
             //when & then
-            mockMvc.get("$patientsUrl/$patientId") {
+            mockMvc.get(formatPatientUrl(patientId)) {
                 header(API_KEY_HEADER, VALID_API_KEY)
             }.andExpect {
                 status { isOk() }
@@ -113,7 +115,7 @@ class PatientControllerTest : ShouldSpec() {
 
         should("return 404 status if patient was not found") {
             //when & then
-            mockMvc.get("$patientsUrl/10000") {
+            mockMvc.get(formatPatientUrl(10000L)) {
                 header(API_KEY_HEADER, VALID_API_KEY)
             }.andExpect {
                 status { isNotFound() }
@@ -135,7 +137,7 @@ class PatientControllerTest : ShouldSpec() {
             val request = UpdatePatientDto(patientId, updatedPatientName, updatedPatientSurname, updatedPatientAddress)
 
             //when & then
-            mockMvc.put("$patientsUrl/$patientId") {
+            mockMvc.put(formatPatientUrl(patientId)) {
                 header(API_KEY_HEADER, VALID_API_KEY)
                 contentType = MediaType.APPLICATION_JSON
                 content = objectMapper.writeValueAsString(request)
@@ -154,7 +156,7 @@ class PatientControllerTest : ShouldSpec() {
             val request = UpdatePatientDto(patientId, updatedPatientName, updatedPatientSurname, updatedPatientAddress)
 
             //when & then
-            mockMvc.put("$patientsUrl/$patientId") {
+            mockMvc.put(formatPatientUrl(patientId)) {
                 header(API_KEY_HEADER, VALID_API_KEY)
                 contentType = MediaType.APPLICATION_JSON
                 content = objectMapper.writeValueAsString(request)
@@ -174,11 +176,11 @@ class PatientControllerTest : ShouldSpec() {
                 )
             )
                 .map(Patient::id)
-                .getOrNull() ?: throw Exception()
+                .getOrNull()!!
             val request = UpdatePatientDto(2L, updatedPatientName, updatedPatientSurname, updatedPatientAddress)
 
             //when & then
-            mockMvc.put("$patientsUrl/$patientId") {
+            mockMvc.put(formatPatientUrl(patientId)) {
                 header(API_KEY_HEADER, VALID_API_KEY)
                 contentType = MediaType.APPLICATION_JSON
                 content = objectMapper.writeValueAsString(request)
@@ -201,7 +203,7 @@ class PatientControllerTest : ShouldSpec() {
                 .getOrNull()
 
             //when & then
-            mockMvc.delete("$patientsUrl/$patientId") {
+            mockMvc.delete(formatPatientUrl(patientId)) {
                 header(API_KEY_HEADER, VALID_API_KEY)
             }.andExpect {
                 status { isNoContent() }
@@ -210,7 +212,7 @@ class PatientControllerTest : ShouldSpec() {
 
         should("return 404 if attempted to delete not existing patient") {
             //when & then
-            mockMvc.delete("$patientsUrl/10000") {
+            mockMvc.delete(formatPatientUrl(10000L)) {
                 header(API_KEY_HEADER, VALID_API_KEY)
             }.andExpect {
                 status { isNotFound() }
