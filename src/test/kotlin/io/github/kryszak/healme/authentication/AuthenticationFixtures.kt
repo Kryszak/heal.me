@@ -6,5 +6,4 @@ const val API_KEY_HEADER = "x-api-key"
 const val VALID_API_KEY = "test"
 const val INVALID_API_KEY = "i-do-not-exist"
 
-val TENANT_ID =
-    io.github.kryszak.healme.authentication.TenantId(UUID.fromString("1bfcfd37-eafa-414a-94be-b377c7399a39"))
+val TENANT_ID = TenantId(UUID.fromString("1bfcfd37-eafa-414a-94be-b377c7399a39"))
