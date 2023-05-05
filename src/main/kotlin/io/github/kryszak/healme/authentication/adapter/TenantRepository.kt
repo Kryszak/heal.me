@@ -1,9 +1,9 @@
 package io.github.kryszak.healme.authentication.adapter
 
-import java.util.UUID
 import org.springframework.data.jpa.repository.JpaRepository
+import java.util.*
 
-interface TenantRepository : JpaRepository<io.github.kryszak.healme.authentication.adapter.TenantEntity, UUID> {
+interface TenantRepository : JpaRepository<TenantEntity, UUID> {
 
-    fun findByApiKey(apiKey: String): io.github.kryszak.healme.authentication.adapter.TenantEntity?
+    fun findByApiKey(apiKey: String): TenantEntity?
 }

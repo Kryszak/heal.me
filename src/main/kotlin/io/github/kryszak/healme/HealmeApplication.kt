@@ -7,5 +7,5 @@ import org.springframework.boot.runApplication
 class HealmeApplication
 
 fun main(args: Array<String>) {
-    runApplication<io.github.kryszak.healme.HealmeApplication>(*args)
+    runApplication<HealmeApplication>(*args)
 }

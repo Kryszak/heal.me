@@ -16,12 +16,12 @@ class TenantEntity {
 
     lateinit var apiKey: String
 
-    fun toDomain() = io.github.kryszak.healme.authentication.TenantId(id)
+    fun toDomain() = TenantId(id)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other == null || Hibernate.getClass(this) != Hibernate.getClass(other)) return false
-        other as io.github.kryszak.healme.authentication.adapter.TenantEntity
+        other as TenantEntity
 
         return id == other.id
     }

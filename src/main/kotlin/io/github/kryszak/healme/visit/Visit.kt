@@ -1,5 +1,6 @@
 package io.github.kryszak.healme.visit
 
+import io.github.kryszak.healme.authentication.TenantId
 import io.github.kryszak.healme.doctor.Doctor
 import io.github.kryszak.healme.patient.Patient
 import java.time.LocalDateTime
@@ -12,5 +13,5 @@ data class Visit(
     val place: String,
     val doctor: Doctor,
     val patient: Patient,
-    val owner: io.github.kryszak.healme.authentication.TenantId,
+    val owner: TenantId,
 )

@@ -1,13 +1,13 @@
 package io.github.kryszak.healme.authentication.configuration
 
+import io.github.kryszak.healme.authentication.GetTenantQuery
 import io.github.kryszak.healme.authentication.GetTenantQuery.Input
 import mu.KotlinLogging
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.BadCredentialsException
 import org.springframework.security.core.Authentication
 
-class ApiKeyAuthenticationManager(private val getTenantQuery: io.github.kryszak.healme.authentication.GetTenantQuery) :
-    AuthenticationManager {
+class ApiKeyAuthenticationManager(private val getTenantQuery: GetTenantQuery) : AuthenticationManager {
 
     private val logger = KotlinLogging.logger {}
 

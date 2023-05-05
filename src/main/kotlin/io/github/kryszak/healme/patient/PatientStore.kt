@@ -1,6 +1,7 @@
 package io.github.kryszak.healme.patient
 
 import arrow.core.Either
+import io.github.kryszak.healme.authentication.TenantId
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 
@@ -9,12 +10,12 @@ interface PatientStore {
     fun savePatient(params: CreatePatientParams): Either<Throwable, Patient>
 
     fun findPatients(
-        tenantId: io.github.kryszak.healme.authentication.TenantId,
+        tenantId: TenantId,
         pageable: Pageable
     ): Either<Throwable, Page<Patient>>
 
     fun findPatient(
-        tenantId: io.github.kryszak.healme.authentication.TenantId,
+        tenantId: TenantId,
         patientId: Long
     ): Either<Throwable, Patient>
 
@@ -27,5 +28,5 @@ data class CreatePatientParams(
     val name: String,
     val surname: String,
     val address: String,
-    val owner: io.github.kryszak.healme.authentication.TenantId
+    val owner: TenantId
 )
