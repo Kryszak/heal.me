@@ -45,15 +45,10 @@ class AuthenticationConfiguration {
     @Bean
     fun filterChain(http: HttpSecurity, apiKeyRequestFilter: ApiKeyRequestFilter): SecurityFilterChain {
         http
-            .csrf()
-            .disable()
-            .sessionManagement()
-            .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-            .and()
+            .csrf { it.disable() }
+            .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
             .addFilter(apiKeyRequestFilter)
-            .authorizeHttpRequests()
-            .anyRequest()
-            .authenticated()
+            .authorizeHttpRequests { it.anyRequest().authenticated() }
 
         return http.build()
     }
