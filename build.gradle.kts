@@ -17,7 +17,7 @@ val kotestSpringExtensionVersion = "1.1.3"
 val mockkVersion = "1.13.5"
 val h2Version = "2.2.220"
 val loggingVersion = "3.0.5"
-val arrowVersion = "1.1.5"
+val arrowVersion = "1.2.0"
 val jacksonKotlinVersion = "2.15.2"
 
 repositories {
