@@ -1,7 +1,7 @@
 plugins {
-    val kotlinVersion = "1.9.0"
-    id("org.springframework.boot") version "3.1.1"
-    id("io.spring.dependency-management") version "1.1.0"
+    val kotlinVersion = "1.9.10"
+    id("org.springframework.boot") version "3.1.3"
+    id("io.spring.dependency-management") version "1.1.3"
     kotlin("jvm") version kotlinVersion
     kotlin("plugin.spring") version kotlinVersion
     kotlin("plugin.jpa") version kotlinVersion
@@ -11,13 +11,13 @@ plugins {
 group = "io.github.kryszak"
 version = "0.0.1-SNAPSHOT"
 
-val kotestVersion = "5.6.2"
+val kotestVersion = "5.7.2"
 val kotestArrowExtensionVersion = "1.3.3"
 val kotestSpringExtensionVersion = "1.1.3"
-val mockkVersion = "1.13.5"
-val h2Version = "2.2.220"
+val mockkVersion = "1.13.7"
+val h2Version = "2.2.224"
 val loggingVersion = "3.0.5"
-val arrowVersion = "1.1.5"
+val arrowVersion = "1.2.1"
 val jacksonKotlinVersion = "2.15.2"
 
 repositories {
