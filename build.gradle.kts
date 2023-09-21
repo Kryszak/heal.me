@@ -55,36 +55,35 @@ kotlin {
     }
 }
 
-tasks.test {
-    useJUnitPlatform() 
-    finalizedBy(tasks.jacocoTestReport)
-}
-
-tasks.withType<Jar>() {
-    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+tasks {
+    test {
+        useJUnitPlatform()
+        finalizedBy(jacocoTestReport)
+    }
+    withType<Jar>() {
+        duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    }
+    jacocoTestReport {
+        dependsOn(test)
+        reports {
+            xml.required.set(true)
+            html.required.set(false)
+        }
+    }
+    withType<JacocoReport> {
+        afterEvaluate {
+            classDirectories.setFrom(files(classDirectories.files.map {
+                fileTree(it).apply {
+                    exclude(
+                        "io/github/kryszak/healme/**/configuration/*",
+                        "io/github/kryszak/healme/**/*Entity.*"
+                    )
+                }
+            }))
+        }
+    }
 }
 
 jacoco {
     toolVersion = "0.8.9"
-}
-
-tasks.jacocoTestReport {
-    dependsOn(tasks.test)
-    reports {
-        xml.required.set(true)
-        html.required.set(false)
-    }
-}
-
-tasks.withType<JacocoReport> {
-    afterEvaluate {
-        classDirectories.setFrom(files(classDirectories.files.map {
-            fileTree(it).apply {
-                exclude(
-                    "io/github/kryszak/healme/**/configuration/*",
-                    "io/github/kryszak/healme/**/*Entity.*"
-                )
-            }
-        }))
-    }
 }
