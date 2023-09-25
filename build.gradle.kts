@@ -12,7 +12,7 @@ group = "io.github.kryszak"
 version = "0.0.1-SNAPSHOT"
 
 val kotestVersion = "5.7.2"
-val kotestArrowExtensionVersion = "1.3.3"
+val kotestArrowExtensionVersion = "1.4.0"
 val kotestSpringExtensionVersion = "1.1.3"
 val mockkVersion = "1.13.7"
 val h2Version = "2.2.224"
