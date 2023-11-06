@@ -11,7 +11,7 @@ plugins {
 group = "io.github.kryszak"
 version = "0.0.1-SNAPSHOT"
 
-val kotestVersion = "5.7.2"
+val kotestVersion = "5.8.0"
 val kotestArrowExtensionVersion = "1.4.0"
 val kotestSpringExtensionVersion = "1.1.3"
 val mockkVersion = "1.13.8"
