@@ -2,7 +2,7 @@ package io.github.kryszak.healme.visit
 
 import arrow.core.Either
 import arrow.core.flatMap
-import arrow.core.zip
+import arrow.core.raise.either
 import io.github.kryszak.healme.common.TenantStore
 import java.time.Duration
 import java.time.LocalDateTime
@@ -16,19 +16,15 @@ class CreateVisitCommand(
 ) {
 
     fun execute(input: Input): Either<Throwable, Unit> =
-        tenantStore.getCurrentTenant()
-            .zip(
-                doctorStore.getDoctor(input.doctorId),
-                patientStore.getPatient(input.patientId)
-            ) { tenant, doctor, patient ->
-                CreateVisitParams(
-                    input.dateTime,
-                    input.place,
-                    doctor,
-                    patient,
-                    tenant
-                )
-            }
+        either {
+            CreateVisitParams(
+                input.dateTime,
+                input.place,
+                doctorStore.getDoctor(input.doctorId).bind(),
+                patientStore.getPatient(input.patientId).bind(),
+                tenantStore.getCurrentTenant().bind()
+            )
+        }
             .flatMap(::validateVisitTimeAvailable)
             .flatMap(visitStore::saveVisit)
             .map {}
