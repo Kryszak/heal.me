@@ -18,7 +18,7 @@ val mockkVersion = "1.13.10"
 val h2Version = "2.2.224"
 val loggingVersion = "3.0.5"
 val arrowVersion = "1.2.3"
-val jacksonKotlinVersion = "2.16.1"
+val jacksonKotlinVersion = "2.16.2"
 
 repositories {
     mavenCentral()
