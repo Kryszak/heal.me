@@ -18,7 +18,7 @@ val mockkVersion = "1.13.12"
 val h2Version = "2.3.232"
 val loggingVersion = "3.0.5"
 val arrowVersion = "1.2.4"
-val jacksonKotlinVersion = "2.18.0"
+val jacksonKotlinVersion = "2.17.2"
 
 repositories {
     mavenCentral()
@@ -31,8 +31,6 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-cache")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:$jacksonKotlinVersion")
 
-    implementation("org.jetbrains.kotlin:kotlin-reflect")
-    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("io.github.microutils:kotlin-logging-jvm:$loggingVersion")
 
     implementation("io.arrow-kt:arrow-core:$arrowVersion")
@@ -46,7 +44,6 @@ dependencies {
     testImplementation("io.kotest.extensions:kotest-assertions-arrow:$kotestArrowExtensionVersion")
     testImplementation("io.mockk:mockk:$mockkVersion")
     testImplementation("com.h2database:h2:$h2Version")
-
 }
 
 kotlin {
