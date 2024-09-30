@@ -31,8 +31,6 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-cache")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:$jacksonKotlinVersion")
 
-    implementation("org.jetbrains.kotlin:kotlin-reflect")
-    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("io.github.microutils:kotlin-logging-jvm:$loggingVersion")
 
     implementation("io.arrow-kt:arrow-core:$arrowVersion")
@@ -46,7 +44,6 @@ dependencies {
     testImplementation("io.kotest.extensions:kotest-assertions-arrow:$kotestArrowExtensionVersion")
     testImplementation("io.mockk:mockk:$mockkVersion")
     testImplementation("com.h2database:h2:$h2Version")
-
 }
 
 kotlin {
