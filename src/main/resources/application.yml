@@ -1,2 +1,6 @@
 healme:
   visit-duration: PT30M # visit duration = 30 minutes
+
+spring:
+  banner:
+    location: banner.txt
