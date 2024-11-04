@@ -18,7 +18,6 @@ val mockkVersion = "1.13.13"
 val h2Version = "2.3.232"
 val loggingVersion = "3.0.5"
 val arrowVersion = "1.2.4"
-val jacksonKotlinVersion = "2.17.2"
 
 repositories {
     mavenCentral()
@@ -29,7 +28,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.boot:spring-boot-starter-cache")
-    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:$jacksonKotlinVersion")
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 
     implementation("io.github.microutils:kotlin-logging-jvm:$loggingVersion")
 
