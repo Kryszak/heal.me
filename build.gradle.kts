@@ -17,7 +17,7 @@ val kotestSpringExtensionVersion = "1.3.0"
 val mockkVersion = "1.13.16"
 val h2Version = "2.3.232"
 val loggingVersion = "3.0.5"
-val arrowVersion = "2.0.0"
+val arrowVersion = "2.0.1"
 
 repositories {
     mavenCentral()
