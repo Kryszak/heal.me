@@ -6,6 +6,7 @@ import io.github.kryszak.healme.authentication.INVALID_API_KEY
 import io.github.kryszak.healme.authentication.TENANT_ID
 import io.github.kryszak.healme.authentication.VALID_API_KEY
 import io.github.kryszak.healme.doctor.*
+import io.kotest.core.extensions.ApplyExtension
 import io.kotest.core.spec.style.ShouldSpec
 import io.kotest.extensions.spring.SpringExtension
 import org.springframework.beans.factory.annotation.Autowired
@@ -21,8 +22,8 @@ import org.springframework.test.web.servlet.*
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
 @Sql(scripts = ["classpath:test_db/tenant.sql"])
+@ApplyExtension(SpringExtension::class)
 class DoctorControllerTest : ShouldSpec() {
-    override fun extensions() = listOf(SpringExtension)
 
     @Autowired
     lateinit var mockMvc: MockMvc
@@ -134,7 +135,8 @@ class DoctorControllerTest : ShouldSpec() {
             )
                 .map(Doctor::id)
                 .getOrNull()!!
-            val request = UpdateDoctorDto(doctorId, updatedDoctorName, updatedDoctorSurname,
+            val request = UpdateDoctorDto(
+                doctorId, updatedDoctorName, updatedDoctorSurname,
                 updatedDoctorSpecialization
             )
 
@@ -155,7 +157,8 @@ class DoctorControllerTest : ShouldSpec() {
         should("return 404 if attempted to update non existing doctor") {
             //given
             val doctorId = 10000L
-            val request = UpdateDoctorDto(doctorId, updatedDoctorName, updatedDoctorSurname, updatedDoctorSpecialization)
+            val request =
+                UpdateDoctorDto(doctorId, updatedDoctorName, updatedDoctorSurname, updatedDoctorSpecialization)
 
             //when & then
             mockMvc.put(formatDoctorUrl(doctorId)) {

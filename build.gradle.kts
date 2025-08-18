@@ -13,7 +13,6 @@ version = "0.0.1-SNAPSHOT"
 
 val kotestVersion = "6.0.0"
 val kotestArrowExtensionVersion = "2.0.0"
-val kotestSpringExtensionVersion = "1.3.0"
 val mockkVersion = "1.14.5"
 val h2Version = "2.3.232"
 val loggingVersion = "3.0.5"
@@ -39,7 +38,7 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("io.kotest:kotest-runner-junit5-jvm:$kotestVersion")
     testImplementation("io.kotest:kotest-assertions-core-jvm:$kotestVersion")
-    testImplementation("io.kotest.extensions:kotest-extensions-spring:$kotestSpringExtensionVersion")
+    testImplementation("io.kotest:kotest-extensions-spring:$kotestVersion")
     testImplementation("io.kotest.extensions:kotest-assertions-arrow:$kotestArrowExtensionVersion")
     testImplementation("io.mockk:mockk:$mockkVersion")
     testImplementation("com.h2database:h2:$h2Version")
