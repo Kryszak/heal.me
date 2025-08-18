@@ -11,6 +11,7 @@ import io.github.kryszak.healme.visit.CreateVisitParams
 import io.github.kryszak.healme.visit.VISIT_PLACE
 import io.github.kryszak.healme.visit.Visit
 import io.github.kryszak.healme.visit.VisitStore
+import io.kotest.core.extensions.ApplyExtension
 import io.kotest.core.spec.style.ShouldSpec
 import io.kotest.extensions.spring.SpringExtension
 import org.springframework.beans.factory.annotation.Autowired
@@ -28,9 +29,8 @@ import java.time.format.DateTimeFormatter
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
 @Sql(scripts = ["classpath:test_db/tenant.sql"])
+@ApplyExtension(SpringExtension::class)
 class VisitControllerTest : ShouldSpec() {
-
-    override fun extensions() = listOf(SpringExtension)
 
     @Autowired
     lateinit var mockMvc: MockMvc
