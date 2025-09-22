@@ -9,7 +9,7 @@ class CreateDoctorCommand(
     private val tenantStore: TenantStore
 ) {
 
-    fun execute(input: Input): Either<Throwable, Unit> {
+    fun execute(input: Input): Either<Throwable, Long> {
         return tenantStore.getCurrentTenant()
             .flatMap {
                 doctorStore.saveDoctor(
@@ -18,7 +18,7 @@ class CreateDoctorCommand(
                         input.surname, input.specialization, it
                     )
                 )
-            }.map { }
+            }.map { it.id }
     }
 
     data class Input(

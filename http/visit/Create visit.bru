@@ -1,0 +1,29 @@
+meta {
+  name: Create visit
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{host}}/visits
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "date": "2023-02-15",
+    "time": "16:31",
+    "place": "Klinika Najlepsza",
+    "doctorId": {{doctorId}},
+    "patientId": {{patientId}}
+  }
+}
+
+vars:post-response {
+  visitId: res.headers.location.split('/').pop()
+}
+
+settings {
+  encodeUrl: true
+}

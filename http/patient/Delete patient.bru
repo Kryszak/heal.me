@@ -1,0 +1,23 @@
+meta {
+  name: Delete patient
+  type: http
+  seq: 3
+}
+
+delete {
+  url: {{host}}/patients/{{patientId}}
+  body: none
+  auth: inherit
+}
+
+body:json {
+  {
+    "name": "Jan",
+    "surname": "Kowalski",
+    "address": "ulica Losowa, 5/10 Randomiwice"
+  }
+}
+
+settings {
+  encodeUrl: true
+}

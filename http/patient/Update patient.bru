@@ -1,0 +1,24 @@
+meta {
+  name: Update patient
+  type: http
+  seq: 5
+}
+
+put {
+  url: {{host}}/patients/{{patientId}}
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "id": {{patientId}},
+    "name": "Janusz",
+    "surname": "Nowak",
+    "address": "ulica Konretna, 5/10 Konkretowice"
+  }
+}
+
+settings {
+  encodeUrl: true
+}

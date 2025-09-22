@@ -1,9 +1,0 @@
-POST http://localhost:8080/doctors
-x-api-key: test
-Content-Type: application/json
-
-{
-  "name": "Jan",
-  "surname": "Kowalski",
-  "specialization": "Chirurg"
-}

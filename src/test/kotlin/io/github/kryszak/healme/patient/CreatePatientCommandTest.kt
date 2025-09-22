@@ -33,7 +33,7 @@ class CreatePatientCommandTest : ShouldSpec({
         val result = command.execute(input)
 
         //then
-        result.shouldBeRight()
+        result shouldBeRight testPatient().id
     }
 
     should("return exception if creation of new patient fails") {

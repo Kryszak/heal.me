@@ -1,0 +1,15 @@
+meta {
+  name: Get visits
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{host}}/visits
+  body: none
+  auth: inherit
+}
+
+settings {
+  encodeUrl: true
+}

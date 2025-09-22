@@ -1,2 +1,0 @@
-DELETE http://localhost:8080/visits/10
-x-api-key: test

@@ -1,0 +1,27 @@
+meta {
+  name: Create patient
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{host}}/patients
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "name": "Jan",
+    "surname": "Kowalski",
+    "address": "ulica Losowa, 5/10 Randomiwice"
+  }
+}
+
+vars:post-response {
+  patientId: res.headers.location.split('/').pop()
+}
+
+settings {
+  encodeUrl: true
+}

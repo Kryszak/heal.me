@@ -1,0 +1,23 @@
+meta {
+  name: Get patients
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{host}}/patients
+  body: none
+  auth: inherit
+}
+
+body:json {
+  {
+    "name": "Jan",
+    "surname": "Kowalski",
+    "address": "ulica Losowa, 5/10 Randomiwice"
+  }
+}
+
+settings {
+  encodeUrl: true
+}

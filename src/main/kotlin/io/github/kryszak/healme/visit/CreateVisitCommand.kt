@@ -15,7 +15,7 @@ class CreateVisitCommand(
     private val visitDuration: Duration,
 ) {
 
-    fun execute(input: Input): Either<Throwable, Unit> =
+    fun execute(input: Input): Either<Throwable, Long> =
         either {
             CreateVisitParams(
                 input.dateTime,
@@ -27,7 +27,7 @@ class CreateVisitCommand(
         }
             .flatMap(::validateVisitTimeAvailable)
             .flatMap(visitStore::saveVisit)
-            .map {}
+            .map { it.id }
 
     private fun validateVisitTimeAvailable(createVisitParams: CreateVisitParams): Either<Throwable, CreateVisitParams> =
         visitStore.existsVisitInGivenTimeWindow(

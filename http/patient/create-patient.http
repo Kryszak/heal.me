@@ -1,9 +1,0 @@
-POST http://localhost:8080/patients
-x-api-key: test
-Content-Type: application/json
-
-{
-  "name": "Jan",
-  "surname": "Kowalski",
-  "address": "ulica Losowa, 5/10 Randomiwice"
-}

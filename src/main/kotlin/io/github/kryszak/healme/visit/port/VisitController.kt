@@ -10,6 +10,7 @@ import org.springframework.data.web.SortDefault
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import java.net.URI
 import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
@@ -40,7 +41,7 @@ class VisitController(
             )
         }
             .flatMap(createVisitCommand::execute)
-            .fold(exceptionMapper::mapExceptionToResponse) { ResponseEntity.status(HttpStatus.CREATED).build() }
+            .fold(exceptionMapper::mapExceptionToResponse) { ResponseEntity.created(URI.create("/visits/$it")).build() }
 
     @GetMapping("/visits")
     fun getVisits(

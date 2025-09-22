@@ -1,0 +1,15 @@
+meta {
+  name: Delete visit
+  type: http
+  seq: 5
+}
+
+delete {
+  url: {{host}}/visits/{{visitId}}
+  body: none
+  auth: inherit
+}
+
+settings {
+  encodeUrl: true
+}

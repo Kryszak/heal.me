@@ -9,6 +9,7 @@ import org.springframework.data.web.SortDefault
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import java.net.URI
 
 @RestController
 @RequestMapping("/patients")
@@ -45,7 +46,7 @@ class PatientController(
                 dto.surname,
                 dto.address
             )
-        ).fold(exceptionMapper::mapExceptionToResponse) { ResponseEntity.status(HttpStatus.CREATED).build() }
+        ).fold(exceptionMapper::mapExceptionToResponse) { ResponseEntity.created(URI.create("/patients/$it")).build() }
 
     @PutMapping("/{patientId}")
     fun updatePatient(@PathVariable patientId: Long, @RequestBody dto: UpdatePatientDto): ResponseEntity<*> =

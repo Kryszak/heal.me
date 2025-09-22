@@ -1,0 +1,27 @@
+meta {
+  name: Create doctor
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{host}}/doctors
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "name": "Janek",
+    "surname": "Kowalski",
+    "specialization": "Chirurg"
+  }
+}
+
+vars:post-response {
+  doctorId: res.headers.location.split('/').pop()
+}
+
+settings {
+  encodeUrl: true
+}

@@ -6,10 +6,10 @@ import io.github.kryszak.healme.common.TenantStore
 
 class CreatePatientCommand(private val patientStore: PatientStore, private val tenantStore: TenantStore) {
 
-    fun execute(input: Input): Either<Throwable, Unit> =
+    fun execute(input: Input): Either<Throwable, Long> =
         tenantStore.getCurrentTenant()
             .flatMap { patientStore.savePatient(CreatePatientParams(input.name, input.surname, input.address, it)) }
-            .map { }
+            .map { it.id }
 
 
     data class Input(

@@ -64,7 +64,7 @@ class CreateVisitCommandTest : ShouldSpec({
         val result = command.execute(input)
 
         //then
-        result.shouldBeRight()
+        result shouldBeRight testVisit().id
     }
 
     should("return exception if another visit is planned in given time") {

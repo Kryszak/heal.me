@@ -6,9 +6,9 @@ import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
 import org.springframework.data.web.PageableDefault
 import org.springframework.data.web.SortDefault
-import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import java.net.URI
 
 @RestController
 @RequestMapping("/doctors")
@@ -25,7 +25,7 @@ class DoctorController(
     fun getDoctors(
         @PageableDefault(page = 0, size = 20)
         @SortDefault(sort = ["id"], direction = Sort.Direction.ASC)
-        pageable: Pageable
+        pageable: Pageable,
     ): ResponseEntity<*> =
         getDoctorsQuery.execute(GetDoctorsQuery.Input(pageable))
             .map { it.map(DoctorDto::from) }
@@ -45,7 +45,9 @@ class DoctorController(
                 dto.surname,
                 dto.specialization
             )
-        ).fold(exceptionMapper::mapExceptionToResponse) { ResponseEntity.status(HttpStatus.CREATED).build() }
+        ).fold(exceptionMapper::mapExceptionToResponse) {
+            ResponseEntity.created(URI.create("/doctors/${it}")).build()
+        }
 
     @PutMapping("/{doctorId}")
     fun updateDoctor(@PathVariable doctorId: Long, @RequestBody dto: UpdateDoctorDto): ResponseEntity<*> =

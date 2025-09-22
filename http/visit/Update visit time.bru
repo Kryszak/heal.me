@@ -1,0 +1,21 @@
+meta {
+  name: Update visit time
+  type: http
+  seq: 4
+}
+
+patch {
+  url: {{host}}/visits/{{visitId}}
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "time": "17:31"
+  }
+}
+
+settings {
+  encodeUrl: true
+}

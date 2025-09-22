@@ -2,7 +2,7 @@
   <configuration default="false" name="HealmeApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
     <option name="ACTIVE_PROFILES" value="local" />
     <module name="healme.main" />
-    <option name="SPRING_BOOT_MAIN_CLASS" value="net.kryszak.healme.HealmeApplication" />
+    <option name="SPRING_BOOT_MAIN_CLASS" value="io.github.kryszak.healme.HealmeApplication" />
     <method v="2">
       <option name="Make" enabled="true" />
     </method>
