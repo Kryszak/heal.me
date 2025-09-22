@@ -3,7 +3,7 @@
 [![Codacy Badge](https://app.codacy.com/project/badge/Coverage/5f435e91f78544f5a7634174aab97a5f)](https://app.codacy.com/gh/Kryszak/heal.me/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_coverage)
 
 # heal.me
-Example reqruitment task with purpose of "showing off how I code" for Kotlin + Springboot stack
+Example recruitment task with purpose of "showing off how I code" for Kotlin + Springboot stack
 
 ## Project description
 Check [requirements](./requirements.md)

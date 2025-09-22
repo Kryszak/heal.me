@@ -91,7 +91,7 @@ class SqlVisitStoreTest : ShouldSpec({
 
     should("delete visits by patient id ") {
         //given
-        every { visitRepository.deleteByPatientIdAndOwner(PATIENT_ID, PATIENT_OWNER.value) } returns 1L
+        every { visitRepository.deleteByPatientIdAndOwner(PATIENT_ID, PATIENT_OWNER.value) } returns Unit
 
         //when
         val result = visitStore.deleteByPatient(PATIENT_ID, PATIENT_OWNER)
@@ -102,7 +102,7 @@ class SqlVisitStoreTest : ShouldSpec({
 
     should("delete visits by doctor id ") {
         //given
-        every { visitRepository.deleteByDoctorIdAndOwner(DOCTOR_ID, DOCTOR_OWNER.value) } returns 1L
+        every { visitRepository.deleteByDoctorIdAndOwner(DOCTOR_ID, DOCTOR_OWNER.value) } returns Unit
 
         //when
         val result = visitStore.deleteByDoctor(DOCTOR_ID, DOCTOR_OWNER)
