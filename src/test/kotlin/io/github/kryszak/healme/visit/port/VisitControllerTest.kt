@@ -1,6 +1,6 @@
 package io.github.kryszak.healme.visit.port
 
-import com.fasterxml.jackson.databind.ObjectMapper
+import io.github.kryszak.healme.BaseIntegrationTest
 import io.github.kryszak.healme.authentication.API_KEY_HEADER
 import io.github.kryszak.healme.authentication.INVALID_API_KEY
 import io.github.kryszak.healme.authentication.TENANT_ID
@@ -10,42 +10,19 @@ import io.github.kryszak.healme.patient.*
 import io.github.kryszak.healme.visit.CreateVisitParams
 import io.github.kryszak.healme.visit.VISIT_PLACE
 import io.github.kryszak.healme.visit.Visit
-import io.github.kryszak.healme.visit.VisitStore
 import io.kotest.core.extensions.ApplyExtension
-import io.kotest.core.spec.style.ShouldSpec
 import io.kotest.extensions.spring.SpringExtension
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
-import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.MediaType
-import org.springframework.test.context.ActiveProfiles
-import org.springframework.test.context.jdbc.Sql
-import org.springframework.test.web.servlet.*
+import org.springframework.test.web.servlet.delete
+import org.springframework.test.web.servlet.get
+import org.springframework.test.web.servlet.patch
+import org.springframework.test.web.servlet.post
 import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 
-@SpringBootTest
-@ActiveProfiles("test")
-@AutoConfigureMockMvc
-@Sql(scripts = ["classpath:test_db/tenant.sql"])
 @ApplyExtension(SpringExtension::class)
-class VisitControllerTest : ShouldSpec() {
-
-    @Autowired
-    lateinit var mockMvc: MockMvc
-
-    @Autowired
-    lateinit var objectMapper: ObjectMapper
-
-    @Autowired
-    lateinit var visitStore: VisitStore
-
-    @Autowired
-    lateinit var patientStore: PatientStore
-
-    @Autowired
-    lateinit var doctorStore: DoctorStore
+class VisitControllerTest : BaseIntegrationTest() {
 
     init {
         val visitsUrl = "/visits"
