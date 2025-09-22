@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.27.xsd"
+        logicalFilePath="healme/create-schema-changeset.xml">
+
+    <changeSet id="create-schema" author="krzysztof.prajs">
+        <createTable tableName="tenant">
+            <column name="id" type="uuid">
+                <constraints primaryKey="true" primaryKeyName="pk_tenant"/>
+            </column>
+            <column name="api_key" type="varchar(32)">
+                <constraints unique="true"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="doctor">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" primaryKeyName="pk_doctor"/>
+            </column>
+            <column name="name" type="varchar(30)"/>
+            <column name="surname" type="varchar(30)"/>
+            <column name="specialization" type="varchar(50)"/>
+            <column name="owner" type="uuid"/>
+        </createTable>
+
+        <createTable tableName="patient">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" primaryKeyName="pk_patient"/>
+            </column>
+            <column name="name" type="varchar(30)"/>
+            <column name="surname" type="varchar(30)"/>
+            <column name="address" type="varchar(255)"/>
+            <column name="owner" type="uuid"/>
+        </createTable>
+
+        <createTable tableName="visit">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" primaryKeyName="pk_visit"/>
+            </column>
+            <column name="date_time" type="timestamp"/>
+            <column name="doctor_id" type="bigint"/>
+            <column name="patient_id" type="bigint"/>
+            <column name="place" type="varchar(255)"/>
+            <column name="owner" type="uuid"/>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>

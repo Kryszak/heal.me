@@ -4,3 +4,5 @@ healme:
 spring:
   banner:
     location: banner.txt
+  liquibase:
+    change-log: classpath:db/master.changelog.xml

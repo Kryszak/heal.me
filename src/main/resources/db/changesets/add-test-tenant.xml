@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.27.xsd"
+        logicalFilePath="healme/add-test-tenant.xml">
+
+    <changeSet id="add-local-tenant" author="krzysztof.prajs" context="local">
+        <insert tableName="tenant">
+            <column name="id">268eb48b-6003-4fdc-809b-ede00edcfece</column>
+            <column name="api_key">test</column>
+        </insert>
+    </changeSet>
+</databaseChangeLog>

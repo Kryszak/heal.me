@@ -15,7 +15,7 @@ import java.util.*
 class VisitEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long = 0
 
     lateinit var dateTime: LocalDateTime

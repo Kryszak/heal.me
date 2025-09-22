@@ -17,6 +17,7 @@ val mockkVersion = "1.14.5"
 val h2Version = "2.3.232"
 val loggingVersion = "3.0.5"
 val arrowVersion = "2.1.2"
+val liquibaseVersion = "4.27.0"
 
 repositories {
     mavenCentral()
@@ -34,6 +35,7 @@ dependencies {
     implementation("io.arrow-kt:arrow-core:$arrowVersion")
 
     runtimeOnly("org.postgresql:postgresql")
+    implementation("org.liquibase:liquibase-core:$liquibaseVersion")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("io.kotest:kotest-runner-junit5-jvm:$kotestVersion")

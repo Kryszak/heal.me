@@ -15,7 +15,6 @@ import org.springframework.test.web.servlet.MockMvc
 @SpringBootTest
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
-@Sql(scripts = ["classpath:test_db/tenant.sql"])
 class BaseIntegrationTest : ShouldSpec() {
 
     @Autowired
