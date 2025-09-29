@@ -3,7 +3,7 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
-         https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.27.xsd"
+         https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.33.xsd"
         logicalFilePath="healme/insert-test-tenant.xml">
 
     <changeSet id="insert-it-test-tenant" author="krzysztof.prajs" context="it">
