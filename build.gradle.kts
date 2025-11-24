@@ -38,6 +38,7 @@ dependencies {
     implementation("org.liquibase:liquibase-core:$liquibaseVersion")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation("org.springframework.boot:spring-boot-webmvc-test")
     testImplementation("io.kotest:kotest-runner-junit5-jvm:$kotestVersion")
     testImplementation("io.kotest:kotest-assertions-core-jvm:$kotestVersion")
     testImplementation("io.kotest:kotest-extensions-spring:$kotestVersion")
