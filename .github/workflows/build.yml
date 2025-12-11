@@ -18,10 +18,12 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '21'
+      - name: Set up just
+        uses: extractions/setup-just@v3
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v5
       - name: Run build with Gradle Wrapper
-        run: ./gradlew clean build
+        run: just build
       - name: Upload coverage reports to Codacy
         uses: codacy/codacy-coverage-reporter-action@v1
         with:
