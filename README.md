@@ -16,5 +16,6 @@ run
 ```
 docker-compose up
 ``` 
-in project directory
+in project directory.
 
+For convenience you can also use `just` command runner with provided configuration.
