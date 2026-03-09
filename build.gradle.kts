@@ -17,7 +17,7 @@ val mockkVersion = "1.14.9"
 val h2Version = "2.4.240"
 val loggingVersion = "3.0.5"
 val arrowVersion = "2.2.1.1"
-val liquibaseVersion = "5.0.1"
+val liquibaseVersion = "5.0.2"
 
 repositories {
     mavenCentral()
