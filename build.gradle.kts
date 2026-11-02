@@ -16,7 +16,7 @@ val kotestArrowExtensionVersion = "2.0.0"
 val mockkVersion = "1.14.11"
 val h2Version = "2.5.252"
 val loggingVersion = "3.0.5"
-val arrowVersion = "2.2.3"
+val arrowVersion = "2.3.0.1"
 val liquibaseVersion = "5.0.4"
 
 repositories {
