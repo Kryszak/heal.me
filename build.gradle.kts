@@ -13,7 +13,7 @@ version = "0.0.1-SNAPSHOT"
 
 val kotestVersion = "6.2.6"
 val kotestArrowExtensionVersion = "2.0.0"
-val mockkVersion = "1.14.11"
+val mockkVersion = "1.14.12"
 val h2Version = "2.5.252"
 val loggingVersion = "3.0.5"
 val arrowVersion = "2.3.0.1"
